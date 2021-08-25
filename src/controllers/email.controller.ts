@@ -118,7 +118,7 @@ export class EmailController {
                 var template = handlebars.compile(html);
                 // logoUrl: 'http://52.54.42.5:8187/images/logo.png',
                 const replacements = {
-                    logoUrl: 'https://firebasestorage.googleapis.com/v0/b/beelivey-2bdbf.appspot.com/o/logo_SHC.png?alt=media&token=ba2bc2d5-ab0b-405e-97b8-50e2fdbe6b0b',
+                    logoUrl: '',
                     url: resetPasswordURL,
                     // token: resetToken,
                     message: !detail.message ? '' : detail.message,

@@ -9,7 +9,7 @@ import { Role } from '../models/enums';
 */
 export function authorization(allowedRoles: Role[] = []) {
 	allowedRoles.push(Role.SuperAdmin); // Always Allow Super Admins
-	allowedRoles.push(Role.Admin); // Always Allow Admins
+	//allowedRoles.push(Role.Admin); // Always Allow Admins
 
 	return (req: Request, res: Response, next: NextFunction) => {
 		const requestMethod = req.method;

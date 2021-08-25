@@ -67,13 +67,13 @@ export class UserRouter {
 
     private routes() {
         this.router.route("/get")
-            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.SuperAdmin, Role.Admin, Role.User]),
+            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.SuperAdmin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.get(req, res);
                 }));
 
         this.router.route("/get-by")
-            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization(),
+            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.SuperAdmin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.getBy(req, res);
                 }));
@@ -150,7 +150,12 @@ export class UserRouter {
                 }));
 
         this.router.route("/edit")
-            .patch(sanitizeQuery, trimQueryWhiteSpace, sanitizeBody, trimBodyWhiteSpace, authentication, authorization(),
+            .patch(sanitizeQuery, 
+                trimQueryWhiteSpace, 
+                sanitizeBody, 
+                trimBodyWhiteSpace, 
+                authentication, 
+                authorization([Role.SuperAdmin, Role.Admin, Role.User]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     try {
                         var { search } = req.query as any;

@@ -11,6 +11,7 @@ import fs from 'fs';
 import UserRouter from './routes/user.router';
 import ContactRouter from './routes/contact.router';
 import SessionRouter from './routes/session.router';
+import faqRouter from './routes/faq.router';
 import dbConnection, { DBConnection } from './config/database';
 import { CONFIG } from './models/constants';
 
@@ -79,6 +80,8 @@ export class App {
         this.app.use('/v1/user', UserRouter.router);
         this.app.use('/v1/session', SessionRouter.router);   
         this.app.use('/v1/contact', ContactRouter.router);
+        this.app.use('/v1/faq', faqRouter.router);
+
     }
 }
 
