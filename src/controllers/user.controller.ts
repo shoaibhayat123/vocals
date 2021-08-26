@@ -210,7 +210,7 @@ export class UserController {
         //         message: `Required fileds (email or user name, role, full name). Validate fields (role -> must be in ${RoleValues}`,
         //     });
         // }
-        if ((!payload.role || RoleValues.indexOf(payload.role) === -1 || payload.role === Role.SuperAdmin
+        if ((!payload.role || RoleValues.indexOf(payload.role) === -1// || payload.role === Role.SuperAdmin
             || payload.role === Role.Admin) || (!payload.email && !payload.userName) || !payload.fullName) {
             throw new BadRequestError(`Required fileds (email or user name, role, full name). Validate fields (role -> ${Role.SuperAdmin}, ${Role.Admin}, ${Role.User})`, {
                 message: `Required fileds (email or user name, role, full name). Validate fields (role -> must be in ${Role.SuperAdmin}, ${Role.Admin}, ${Role.User})`,

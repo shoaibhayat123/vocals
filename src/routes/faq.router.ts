@@ -26,7 +26,7 @@ export class FAQRouter {
     private async get(req, res) {
         try {
             const { search, type, sortKey } = req.query as any;
-            const contacts = await this.faqController.get(search, type, sortKey, await Pagination.pagination(req, 'CT'));
+            const contacts = await this.faqController.get(search, type);
             contacts === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(contacts);
@@ -50,6 +50,17 @@ export class FAQRouter {
     private async create(req, res) {
         try {
             const result = await this.faqController.create({ payload: req.body });
+            res.json(result);
+        } catch (error) {
+            console.log({error});
+            res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
+        }
+    }
+
+    private async edit(req, res) {
+        try {
+            var { search } = req.query as any;
+            const result = await this.faqController.edit({  query: { id: search },payload: req.body });
             res.json(result);
         } catch (error) {
             console.log({error});
@@ -84,6 +95,12 @@ export class FAQRouter {
             .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.create(req, res);
+                }));
+        
+        this.router.route("/edit")
+            .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin]),
+                asyncWrap<IAuthorizedResponse>(async (req, res) => {
+                    await this.edit(req, res);
                 }));
 
         this.router.route("/delete")

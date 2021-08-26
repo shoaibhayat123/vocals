@@ -1,8 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
+import { CategoryValues, FaqCategory } from './enums/faqCategory';
 
 const FAQSchema = new Schema({
     question: { type: String },
     answer: { type: String },
+    category: { type: String, enum: CategoryValues, default: FaqCategory.Login },
+
 
     deleted: { type: Boolean, default: false },
     deactivated: { type: Boolean, default: false },
@@ -13,6 +16,7 @@ const FAQSchema = new Schema({
 export interface IFAQ extends mongoose.Document {
     question: string,
     answer: string,
+    category: FaqCategory,
     
 
     deleted: boolean,
@@ -32,7 +36,8 @@ FAQSchema.statics.getSearchableFields = function(): string[] {
     return [
         "_id",
         "question",
-        "answer"
+        "answer",
+        "category"
     ];
 }
 
@@ -41,6 +46,7 @@ FAQSchema.statics.getClientFields = function(): string[] {
         "_id",
         "question",
         "answer",
+        "category",
         "deleted",
         "createdAt"
     ];

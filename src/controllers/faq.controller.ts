@@ -2,11 +2,13 @@ import mongoose, { Schema } from 'mongoose';
 import { FAQ, IFAQ } from '../models/FAQ.model';
 import { Role, SearchType, Sort, SortValues } from '../models/enums';
 import { UnauthorizedError, BadRequestError, InternalServerError, NotFoundError, ForbiddenError, ConflictError } from "../errors";
+import { FaqCategory } from '../models/enums/faqCategory';
 
 interface CreateFAQParams {
     payload: {
         question: string,
         answer: string,
+        category: FaqCategory,
         faq_id?: string
     }
 }
@@ -19,6 +21,7 @@ interface CreateOrUpdateFAQParams {
     payload: {
         question?: string,
         answer?: string,
+        category?: FaqCategory,
         faq_id?: string
 
     }
@@ -28,7 +31,7 @@ interface CreateOrUpdateFAQParams {
 export class FAQController {
     constructor() { }
 
-    async get(search: string, type: SearchType, sortKey: Sort, pageOptions): Promise<IFAQ[] | null> {
+    async get(search: string, type: SearchType): Promise<IFAQ[] | null> {
         let query = {};
         const filter = FAQ.getSearchableFieldsFilter();
         if (search !== undefined && typeof search === 'string') {
@@ -38,7 +41,7 @@ export class FAQController {
                 return !type ? { [field]: search } : type === SearchType.Multi ? { [field]: searchRegExp } : { [field]: search };
             })
         }
-        return this.returnGetResponse(query, sortKey, pageOptions);
+        return this.returnGetResponse(query);
     }
 
     async getBy(search: string): Promise<IFAQ | null> {
@@ -47,7 +50,7 @@ export class FAQController {
     }
 
     async create({ payload }: CreateFAQParams){
-        if (!payload.question || !payload.answer) {
+        if (!payload.question || !payload.answer || !payload.category) {
             throw new BadRequestError(`Validate fields question and answer`, {
                 message: `Requiered Fields question and answer`,
             });
@@ -77,7 +80,7 @@ export class FAQController {
         };
         const _query = { _id: faq._id };
         const result = await FAQ.findOneAndUpdate(_query, updateDoc, {
-            upsert: true, new: true
+            upsert: true, new: true, useFindAndModify:false
         }) as unknown as IFAQ;
         if (result === null) {
             throw new BadRequestError('FAQ not edited correctly, Try to edit again', {
@@ -102,7 +105,7 @@ export class FAQController {
             });
         }
         const _query = { _id: query.id };
-        faq = await FAQ.findOneAndUpdate(_query, { 'deleted': true }, { upsert: true, new: true }) as unknown as IFAQ;
+        faq = await FAQ.findOneAndUpdate(_query, { 'deleted': true }, { upsert: true, new: true,useFindAndModify:false }) as unknown as IFAQ;
         if (faq === null) {
             throw new BadRequestError('FAQ not deleted correctly, Try to delete again', {
                 message: 'FAQ not deleted correctly, Try to delete again',
@@ -118,30 +121,13 @@ export class FAQController {
         return await FAQ.findOne(query);
     }
 
-    async returnGetResponse(query, sortKey, pageOptions): Promise<IFAQ[] | null> {
-        var sort = { createdAt: -1 } as any;
-        if (sortKey) {
-            const index = await SortValues.indexOf(sortKey);
-            if (index === -1) {
-                throw new BadRequestError(`Enter valid sorting options, Should be in ${SortValues}`, {
-                    message: `Enter valid sorting options, Should be in ${SortValues}`,
-                    i18n: 'notExist'
-                });
-            }
-            if (sortKey === Sort.ALPHA) {
-                sort = { name: 1 };
-            } else if (sortKey === Sort.DESC) {
-                sort = { createdAt: 1 };
-            }
-        }
+    async returnGetResponse(query): Promise<IFAQ[] | null> {
         query = { $and: [{ 'deleted': false }, query] };
         let data = await FAQ.aggregate([{
             $facet: {
                 paginatedResult: [
                     { $match: query },
-                    { $sort: sort },
-                    { $skip: (pageOptions.limit * pageOptions.page) - pageOptions.limit },
-                    { $limit: pageOptions.limit }
+                    { $sort: {category:1} },
                 ],
                 totalCount: [
                     { $match: query },
@@ -151,7 +137,7 @@ export class FAQController {
         },
         {
             $project: {
-                "paginatedResult": "$paginatedResult",
+                "result": "$paginatedResult",
                 "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
             }
         }]);
