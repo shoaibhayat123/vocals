@@ -4,7 +4,7 @@ import { CategoryValues, FaqCategory } from './enums/faqCategory';
 const FAQSchema = new Schema({
     question: { type: String },
     answer: { type: String },
-    category: { type: String, enum: CategoryValues, default: FaqCategory.Login },
+    category: { type: String, enum: CategoryValues },
 
 
     deleted: { type: Boolean, default: false },
