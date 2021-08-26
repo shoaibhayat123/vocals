@@ -329,7 +329,7 @@ export class UserController {
         };
         const _query = { _id: user._id };
         const result = await User.findOneAndUpdate(_query, updateDoc, {
-            upsert: true, new: true, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
+            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
                 + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
         }) as unknown as IUser;
         return result;
@@ -395,7 +395,7 @@ export class UserController {
         await this.emailController.send(subject, payload, user.email, '', filename, '');
         user.code = code;
         const _query = { _id: user.id };
-        const result = await User.findOneAndUpdate(_query, user, { upsert: true, new: true }) as unknown as IUser;
+        const result = await User.findOneAndUpdate(_query, user, { upsert: true, new: true,useFindAndModify:false }) as unknown as IUser;
         return result;
     }
 
