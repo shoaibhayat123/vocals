@@ -51,7 +51,7 @@ var tokenExtractor = function () { return __awaiter(void 0, void 0, void 0, func
         switch (_a.label) {
             case 0:
                 token = '';
-                return [4 /*yield*/, chai.request('http://localhost:3002/')
+                return [4 /*yield*/, chai.request('http://localhost:3005/')
                         .post('v1/user/login')
                         .set('authorization', "Bearer " + STATIC_TOKEN)
                         .send({

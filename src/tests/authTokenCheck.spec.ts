@@ -7,7 +7,7 @@ const STATIC_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InJvbGUiO
 
  const tokenExtractor = async()=> {
   let token: string = ''
-  let req = await chai.request('http://localhost:3002/')
+  let req = await chai.request('http://localhost:3005/')
   .post('v1/user/login')
   .set('authorization', `Bearer ${STATIC_TOKEN}`)
   .send({

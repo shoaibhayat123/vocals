@@ -72,7 +72,7 @@ describe('User Sign Up', function () {
         var req;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, chai.request('http://localhost:3002/')
+                case 0: return [4 /*yield*/, chai.request('http://localhost:3005/')
                         .post('v1/user/create')
                         .set('authorization', "Bearer " + constants_1.CONFIG.STATIC_TOKEN)
                         .send({
@@ -86,7 +86,7 @@ describe('User Sign Up', function () {
                         address: "plot bbc, street 5",
                         role: "user",
                         description: "lorem5",
-                        imageUrl: "http://3.16.172.190:3002/static/1622736212474_7f5489e3.jpg",
+                        imageUrl: "http://3.16.172.190:3005/static/1622736212474_7f5489e3.jpg",
                         isAcceptedTerm: true
                     })];
                 case 1:
@@ -100,7 +100,7 @@ describe('User Sign Up', function () {
         var req;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, chai.request('http://localhost:3002/')
+                case 0: return [4 /*yield*/, chai.request('http://localhost:3005/')
                         .post('v1/user/create')
                         .set('authorization', "Bearer " + constants_1.CONFIG.STATIC_TOKEN)
                         .send({
@@ -114,7 +114,7 @@ describe('User Sign Up', function () {
                         "address": "plot bbc, street 5",
                         "role": "user",
                         "description": "lorem5",
-                        "imageUrl": "http://3.16.172.190:3002/static/1622736212474_7f5489e3.jpg",
+                        "imageUrl": "http://3.16.172.190:3005/static/1622736212474_7f5489e3.jpg",
                         "isAcceptedTerm": true
                     })];
                 case 1:
@@ -130,7 +130,7 @@ describe('User Signin', function () {
         var req;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, chai.request('http://localhost:3002/')
+                case 0: return [4 /*yield*/, chai.request('http://localhost:3005/')
                         .post('v1/user/login')
                         .set('authorization', "Bearer " + constants_1.CONFIG.STATIC_TOKEN)
                         .send({
@@ -148,7 +148,7 @@ describe('User Signin', function () {
         var req;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, chai.request('http://localhost:3002/')
+                case 0: return [4 /*yield*/, chai.request('http://localhost:3005/')
                         .post('v1/user/login')
                         .set('authorization', "Bearer " + constants_1.CONFIG.STATIC_TOKEN)
                         .send({
@@ -171,7 +171,7 @@ describe('User Sign Out', function () {
                 case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
                 case 1:
                     token = _a.sent();
-                    return [4 /*yield*/, chai.request('http://localhost:3002/')
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
                             .get('v1/session/logout')
                             .set('authorization', "Bearer " + token)];
                 case 2:
@@ -188,7 +188,7 @@ describe('User Sign Out', function () {
                 case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
                 case 1:
                     token = _a.sent();
-                    return [4 /*yield*/, chai.request('http://localhost:3002/')
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
                             .get('v1/session/logout')
                             .set('authorization', "Bearer " + token)];
                 case 2:

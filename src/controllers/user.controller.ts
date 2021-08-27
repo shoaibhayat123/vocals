@@ -311,6 +311,16 @@ export class UserController {
                 }
             }
         }
+        if (payload.userName) {
+            payload.userName = payload.userName.toLocaleLowerCase();
+            const isUnique = await this.userNameIsUnique(payload.userName);
+            if (isUnique === false) {
+                throw new BadRequestError("Cannot edit user, user name already in use", {
+                    message: 'Cannot edit user, user name already in use',
+                    payload,
+                });
+            }
+        }
         // if (payload.role && (RoleValues.indexOf(payload.role) === -1 || payload.role === Role.Client) {
         //     throw new BadRequestError(`Role must be in ${RoleValues}, but client role not valid for auth operations`, {
         //         message: `Role must be in ${RoleValues}, but client role not valid for auth operations`,
