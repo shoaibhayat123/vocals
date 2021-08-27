@@ -21,9 +21,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FAQ = void 0;
 var mongoose_1 = __importStar(require("mongoose"));
+var faqCategory_1 = require("./enums/faqCategory");
 var FAQSchema = new mongoose_1.Schema({
     question: { type: String },
     answer: { type: String },
+    category: { type: String, enum: faqCategory_1.CategoryValues },
     deleted: { type: Boolean, default: false },
     deactivated: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
@@ -34,7 +36,8 @@ FAQSchema.statics.getSearchableFields = function () {
     return [
         "_id",
         "question",
-        "answer"
+        "answer",
+        "category"
     ];
 };
 FAQSchema.statics.getClientFields = function () {
@@ -42,6 +45,7 @@ FAQSchema.statics.getClientFields = function () {
         "_id",
         "question",
         "answer",
+        "category",
         "deleted",
         "createdAt"
     ];

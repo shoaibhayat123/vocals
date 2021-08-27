@@ -58,7 +58,7 @@ var errors_1 = require("../errors");
 var FAQController = /** @class */ (function () {
     function FAQController() {
     }
-    FAQController.prototype.get = function (search, type, sortKey, pageOptions) {
+    FAQController.prototype.get = function (search, type) {
         return __awaiter(this, void 0, void 0, function () {
             var query, filter, searchRegExp_1, searchableFields;
             return __generator(this, function (_a) {
@@ -72,7 +72,7 @@ var FAQController = /** @class */ (function () {
                         return !type ? (_a = {}, _a[field] = search, _a) : type === enums_1.SearchType.Multi ? (_b = {}, _b[field] = searchRegExp_1, _b) : (_c = {}, _c[field] = search, _c);
                     });
                 }
-                return [2 /*return*/, this.returnGetResponse(query, sortKey, pageOptions)];
+                return [2 /*return*/, this.returnGetResponse(query)];
             });
         });
     };
@@ -96,7 +96,7 @@ var FAQController = /** @class */ (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        if (!payload.question || !payload.answer) {
+                        if (!payload.question || !payload.answer || !payload.category) {
                             throw new errors_1.BadRequestError("Validate fields question and answer", {
                                 message: "Requiered Fields question and answer",
                             });
@@ -134,7 +134,7 @@ var FAQController = /** @class */ (function () {
                         updateDoc = __assign({}, payload);
                         _query = { _id: faq._id };
                         return [4 /*yield*/, FAQ_model_1.FAQ.findOneAndUpdate(_query, updateDoc, {
-                                upsert: true, new: true
+                                upsert: true, new: true, useFindAndModify: false
                             })];
                     case 2:
                         result = _b.sent();
@@ -173,7 +173,7 @@ var FAQController = /** @class */ (function () {
                             });
                         }
                         _query = { _id: query.id };
-                        return [4 /*yield*/, FAQ_model_1.FAQ.findOneAndUpdate(_query, { 'deleted': true }, { upsert: true, new: true })];
+                        return [4 /*yield*/, FAQ_model_1.FAQ.findOneAndUpdate(_query, { 'deleted': true }, { upsert: true, new: true, useFindAndModify: false })];
                     case 2:
                         faq = (_b.sent());
                         if (faq === null) {
@@ -203,39 +203,18 @@ var FAQController = /** @class */ (function () {
             });
         });
     };
-    FAQController.prototype.returnGetResponse = function (query, sortKey, pageOptions) {
+    FAQController.prototype.returnGetResponse = function (query) {
         return __awaiter(this, void 0, void 0, function () {
-            var sort, index, data;
+            var data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        sort = { createdAt: -1 };
-                        if (!sortKey) return [3 /*break*/, 2];
-                        return [4 /*yield*/, enums_1.SortValues.indexOf(sortKey)];
-                    case 1:
-                        index = _a.sent();
-                        if (index === -1) {
-                            throw new errors_1.BadRequestError("Enter valid sorting options, Should be in " + enums_1.SortValues, {
-                                message: "Enter valid sorting options, Should be in " + enums_1.SortValues,
-                                i18n: 'notExist'
-                            });
-                        }
-                        if (sortKey === enums_1.Sort.ALPHA) {
-                            sort = { name: 1 };
-                        }
-                        else if (sortKey === enums_1.Sort.DESC) {
-                            sort = { createdAt: 1 };
-                        }
-                        _a.label = 2;
-                    case 2:
                         query = { $and: [{ 'deleted': false }, query] };
                         return [4 /*yield*/, FAQ_model_1.FAQ.aggregate([{
                                     $facet: {
                                         paginatedResult: [
                                             { $match: query },
-                                            { $sort: sort },
-                                            { $skip: (pageOptions.limit * pageOptions.page) - pageOptions.limit },
-                                            { $limit: pageOptions.limit }
+                                            { $sort: { category: 1 } },
                                         ],
                                         totalCount: [
                                             { $match: query },
@@ -245,11 +224,11 @@ var FAQController = /** @class */ (function () {
                                 },
                                 {
                                     $project: {
-                                        "paginatedResult": "$paginatedResult",
+                                        "result": "$paginatedResult",
                                         "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
                                     }
                                 }])];
-                    case 3:
+                    case 1:
                         data = _a.sent();
                         data = data.length > 0 ? data[0] : null;
                         return [2 /*return*/, data];
