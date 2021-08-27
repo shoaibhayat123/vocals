@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 import app from './app';
 // import { logger } from './shared/winston-logger';
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3005;
 
 import http from 'http'
 
