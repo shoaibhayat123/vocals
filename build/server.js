@@ -27,7 +27,7 @@ var dotenv = __importStar(require("dotenv"));
 dotenv.config();
 var app_1 = __importDefault(require("./app"));
 // import { logger } from './shared/winston-logger';
-var PORT = process.env.PORT || 3002;
+var PORT = process.env.PORT || 3005;
 var http_1 = __importDefault(require("http"));
 var server = http_1.default.createServer(app_1.default);
 server.listen(PORT, function () {

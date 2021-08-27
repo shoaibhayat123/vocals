@@ -67,7 +67,6 @@ var faq_controller_1 = __importDefault(require("../controllers/faq.controller"))
 var async_wrap_1 = require("../shared/async-wrap");
 var errors_1 = require("../errors");
 var enums_1 = require("../models/enums");
-var shared_1 = require("../models/shared");
 var FAQRouter = /** @class */ (function () {
     function FAQRouter(faqController) {
         this.faqController = faqController;
@@ -78,28 +77,25 @@ var FAQRouter = /** @class */ (function () {
     FAQRouter.prototype.middleware = function () { };
     FAQRouter.prototype.get = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, search, type, sortKey, contacts, _b, _c, _d, error_1;
-            return __generator(this, function (_e) {
-                switch (_e.label) {
+            var _a, search, type, sortKey, contacts, error_1;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
                     case 0:
-                        _e.trys.push([0, 3, , 4]);
+                        _b.trys.push([0, 2, , 3]);
                         _a = req.query, search = _a.search, type = _a.type, sortKey = _a.sortKey;
-                        _c = (_b = this.faqController).get;
-                        _d = [search, type, sortKey];
-                        return [4 /*yield*/, shared_1.Pagination.pagination(req, 'CT')];
-                    case 1: return [4 /*yield*/, _c.apply(_b, _d.concat([_e.sent()]))];
-                    case 2:
-                        contacts = _e.sent();
+                        return [4 /*yield*/, this.faqController.get(search, type)];
+                    case 1:
+                        contacts = _b.sent();
                         contacts === null ? res.status(404).send(new errors_1.NotFoundError("No record found", {
                             message: "No record found",
                             i18n: 'notExist'
                         })) : res.json(contacts);
-                        return [3 /*break*/, 4];
-                    case 3:
-                        error_1 = _e.sent();
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_1 = _b.sent();
                         res.status(error_1.status || 500).send(!error_1.status ? new errors_1.InternalServerError("Something wrong") : error_1);
-                        return [3 /*break*/, 4];
-                    case 4: return [2 /*return*/];
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
                 }
             });
         });
@@ -151,9 +147,32 @@ var FAQRouter = /** @class */ (function () {
             });
         });
     };
+    FAQRouter.prototype.edit = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var search, result, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        search = req.query.search;
+                        return [4 /*yield*/, this.faqController.edit({ query: { id: search }, payload: req.body })];
+                    case 1:
+                        result = _a.sent();
+                        res.json(result);
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_4 = _a.sent();
+                        console.log({ error: error_4 });
+                        res.status(error_4.status || 500).send(!error_4.status ? new errors_1.InternalServerError("Something wrong") : error_4);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        });
+    };
     FAQRouter.prototype.delete = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var query, result, error_4;
+            var query, result, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -165,8 +184,8 @@ var FAQRouter = /** @class */ (function () {
                         res.json(result);
                         return [3 /*break*/, 3];
                     case 2:
-                        error_4 = _a.sent();
-                        res.status(error_4.status || 500).send(!error_4.status ? new errors_1.InternalServerError("Something wrong") : error_4);
+                        error_5 = _a.sent();
+                        res.status(error_5.status || 500).send(!error_5.status ? new errors_1.InternalServerError("Something wrong") : error_5);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -202,6 +221,17 @@ var FAQRouter = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, this.create(req, res)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); }));
+        this.router.route("/edit")
+            .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.edit(req, res)];
                     case 1:
                         _a.sent();
                         return [2 /*return*/];

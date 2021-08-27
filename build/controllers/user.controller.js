@@ -240,7 +240,7 @@ var UserController = /** @class */ (function () {
                         //         message: `Required fileds (email or user name, role, full name). Validate fields (role -> must be in ${RoleValues}`,
                         //     });
                         // }
-                        if ((!payload.role || enums_1.RoleValues.indexOf(payload.role) === -1 //|| payload.role === Role.SuperAdmin
+                        if ((!payload.role || enums_1.RoleValues.indexOf(payload.role) === -1 // || payload.role === Role.SuperAdmin
                             || payload.role === enums_1.Role.Admin) || (!payload.email && !payload.userName) || !payload.fullName) {
                             throw new errors_1.BadRequestError("Required fileds (email or user name, role, full name). Validate fields (role -> " + enums_1.Role.SuperAdmin + ", " + enums_1.Role.Admin + ", " + enums_1.Role.User + ")", {
                                 message: "Required fileds (email or user name, role, full name). Validate fields (role -> must be in " + enums_1.Role.SuperAdmin + ", " + enums_1.Role.Admin + ", " + enums_1.Role.User + ")",
@@ -380,7 +380,7 @@ var UserController = /** @class */ (function () {
                         updateDoc = __assign({}, payload);
                         _query = { _id: user._id };
                         return [4 /*yield*/, user_model_1.User.findOneAndUpdate(_query, updateDoc, {
-                                upsert: true, new: true, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
+                                upsert: true, new: true, useFindAndModify: false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
                                     + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
                             })];
                     case 4:
@@ -472,7 +472,7 @@ var UserController = /** @class */ (function () {
                         _a.sent();
                         user.code = code;
                         _query = { _id: user.id };
-                        return [4 /*yield*/, user_model_1.User.findOneAndUpdate(_query, user, { upsert: true, new: true })];
+                        return [4 /*yield*/, user_model_1.User.findOneAndUpdate(_query, user, { upsert: true, new: true, useFindAndModify: false })];
                     case 3:
                         result = _a.sent();
                         return [2 /*return*/, result];
