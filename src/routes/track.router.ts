@@ -114,7 +114,7 @@ export class TrackRouter {
                 }));
         
         this.router.route("/edit")
-            .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin]),
+            .patch(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.edit(req, res);
                 }));

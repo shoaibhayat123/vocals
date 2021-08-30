@@ -12,6 +12,7 @@ interface CreateTrackParams {
     genre: genreTypes,
     mood: moodTypes,
     bpm: bpmTypes,
+    tagged: boolean,
     releaseDate: Date,
     description: string,
     imageUrl: string,
@@ -30,6 +31,7 @@ interface CreateOrUpdateTrackParams {
     genre?: genreTypes,
     mood?: moodTypes,
     bpm?: bpmTypes,
+    tagged?: boolean,
     releaseDate?: Date,
     description?: string,
     imageUrl?: string,
@@ -62,9 +64,9 @@ export class TrackController {
     }
 
     async create({ payload }: CreateTrackParams){
-        if (!payload.title || !payload.trackUrl || !payload.bpm || !payload.genre || !payload.mood) {
-            throw new BadRequestError(`Validate fields title, trackUrl, bpm, genre and mood`, {
-                message: `Requiered Fields title, trackUrl, bpm, genre and mood`,
+        if (!payload.title || !payload.trackUrl || !payload.bpm || !payload.genre || !payload.mood || !payload.tagged) {
+            throw new BadRequestError(`Validate fields title, trackUrl, bpm, genre, tagged and mood`, {
+                message: `Requiered Fields title, trackUrl, bpm, genre, tagged and mood`,
             });
         }
         const track = new Track({
