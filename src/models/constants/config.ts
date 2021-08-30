@@ -36,7 +36,8 @@ export const CONFIG = {
     // SFTP_ALERT_CONTACTS: sftpAlertContacts,	
     
     // IMAGEBASEURL: 'http://localhost:3005',  // local
-    AUDIODIR: 'audios',
+    TAGAUDIODIR: 'taggedAudios',
+    UNTAGAUDIODIR: 'untaggedAudios',
     VIDEODIR: 'videos',
     FILEDIR: 'files',
     IMAGEDIR: 'images',

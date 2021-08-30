@@ -22,9 +22,12 @@ export class UploadController {
         if (type === FileType.video) {
             extensions = CONFIG.videoExtensions;
             dir = CONFIG.VIDEODIR;
-        } else if (type === FileType.audio) {
+        } else if (type === FileType.untaggedAudio) {
             extensions = CONFIG.audioExtensions;
-            dir = CONFIG.AUDIODIR;
+            dir = CONFIG.UNTAGAUDIODIR;
+        }else if (type === FileType.taggedAudio) {
+            extensions = CONFIG.audioExtensions;
+            dir = CONFIG.TAGAUDIODIR;
         } else if (type === FileType.file) {
             extensions = CONFIG.fileExtensions;
             dir = CONFIG.FILEDIR;

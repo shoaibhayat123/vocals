@@ -108,19 +108,19 @@ export class TrackRouter {
                 }));
 
         this.router.route("/create")
-            .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin, Role.User]),
+            .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.create(req, res);
                 }));
         
         this.router.route("/edit")
-            .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin, Role.User]),
+            .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.edit(req, res);
                 }));
 
         this.router.route("/delete")
-            .get(sanitizeQuery, trimQueryWhiteSpace, sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin, Role.Admin, Role.User]),
+            .get(sanitizeQuery, trimQueryWhiteSpace, sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin, Role.Admin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.delete(req, res);
                 }));

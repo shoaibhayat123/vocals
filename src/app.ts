@@ -60,7 +60,8 @@ export class App {
         this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.IMAGEDIR));
         this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.VIDEODIR));
         this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.FILEDIR));
-        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.AUDIODIR));
+        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.UNTAGAUDIODIR));
+        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.TAGAUDIODIR));
         
         // default options
         this.app.use(fileUpload({
