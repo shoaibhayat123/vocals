@@ -27,6 +27,7 @@ export function authorization(allowedRoles: Role[] = []) {
 				// throw new ForbiddenError("Not authorized to use this route");
 				return res.status(401).send(new ForbiddenError("Not authorized to use this route"));
 			}
+			res.locals.user = jwt
 			next();
 		}
 	};

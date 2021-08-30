@@ -13,6 +13,8 @@ import ContactRouter from './routes/contact.router';
 import SessionRouter from './routes/session.router';
 import faqRouter from './routes/faq.router';
 import dbConnection, { DBConnection } from './config/database';
+import UploadRouter from './routes/upload.router';
+import TrackRouter from './routes/track.router';
 import { CONFIG } from './models/constants';
 
 // const logger = createLogger('app.ts');
@@ -55,6 +57,10 @@ export class App {
         this.app.use(cors());
         this.app.use(httpContext.middleware);
         this.app.use(requestIp.mw());
+        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.IMAGEDIR));
+        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.VIDEODIR));
+        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.FILEDIR));
+        this.app.use(CONFIG.IMAGEURLNAME, express.static(CONFIG.AUDIODIR));
         
         // default options
         this.app.use(fileUpload({
@@ -81,6 +87,8 @@ export class App {
         this.app.use('/v1/session', SessionRouter.router);   
         this.app.use('/v1/contact', ContactRouter.router);
         this.app.use('/v1/faq', faqRouter.router);
+        this.app.use('/v1/upload', UploadRouter.router);
+        this.app.use('/v1/track', TrackRouter.router);
 
     }
 }

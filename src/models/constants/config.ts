@@ -36,9 +36,22 @@ export const CONFIG = {
     // SFTP_ALERT_CONTACTS: sftpAlertContacts,	
     
     // IMAGEBASEURL: 'http://localhost:3005',  // local
-    // IMAGEURLNAME: '/static',
+    AUDIODIR: 'audios',
+    VIDEODIR: 'videos',
+    FILEDIR: 'files',
+    IMAGEDIR: 'images',
+    imageExtensions: ['.jpg', '.png', '.jpeg'],
+    videoExtensions: ['.mp4', '.avi', '.mpg', '.mov'],
+    audioExtensions: ['.mp3','.wav'],
+    fileExtensions: ['.pdf', '.doc', '.docx', '.xlsx', '.csv'],
+    exportFileTypeExtensions: ['pdf', 'xlsx', 'csv'],
+
+    // IMAGEBASEURL: 'https://swinging-api.appnofy.com',  // staging http://3.16.172.190:3002/v1
+    //IMAGEBASEURL: 'http://api.swinginghcustoms.com',  // live http://23.20.51.167:3002/
+    IMAGEBASEURL: 'http://localhost:3005',  // local
+    IMAGEURLNAME: '/static',
     STATIC_TOKEN: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InJvbGUiOiJ1c2VyIiwidXNlcklkIjoiNWY1Yjk0YTY2YTNjYTMwMDA0YzJjZWJiIn0sImlhdCI6MTU5OTgzOTMwMiwiZXhwIjoxNjAwMDk4NTAyfQ.Fdft4zwZwOzww6Fdbk2t4UiTz1cpNSrIYrzsvddXh1U',
-    mutliGETRouteModules: ['category', 'package', 'product', 'plan'],
+    mutliGETRouteModules: ['faq', 'track', 'product', 'plan'],
     mutliPOSTRouteModules: ['user', 'contact', 'subscribe'],
     BCRYPT_SALT_ROUNDS:10, //+configEnvs['BCRYPT_SALT_ROUNDS'] || 10,
     BCRYPT_REHASH_DATE: BCRYPT_REHASH_DATE || new Date("2019-11-26"),
