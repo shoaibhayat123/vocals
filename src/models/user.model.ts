@@ -24,6 +24,7 @@ const UserSchema = new Schema({
     country: { type: String },
     address: { type: String },
     isAcceptedTerm: { type: Boolean, default: false },
+    license_id: { type: Schema.Types.ObjectId, ref: 'License', default:null},
 
     code: { type: String },
 
@@ -63,6 +64,7 @@ export interface IUser extends mongoose.Document {
     address: string,
     isAcceptedTerm: boolean,
     code: string,
+    license_id: string,
 
     deleted: boolean,
     deactivated: boolean,
@@ -140,6 +142,7 @@ UserSchema.statics.getClientFields = function(): string[] {
         "country",
         "address",
         "isAcceptedTerm",
+        "license_id",
         "code",
         "approvedAt",
         "approvedBy",

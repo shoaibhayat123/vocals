@@ -15,6 +15,7 @@ import faqRouter from './routes/faq.router';
 import dbConnection, { DBConnection } from './config/database';
 import UploadRouter from './routes/upload.router';
 import TrackRouter from './routes/track.router';
+import LicenseRouter from './routes/license.router';
 import { CONFIG } from './models/constants';
 
 // const logger = createLogger('app.ts');
@@ -90,6 +91,7 @@ export class App {
         this.app.use('/v1/faq', faqRouter.router);
         this.app.use('/v1/upload', UploadRouter.router);
         this.app.use('/v1/track', TrackRouter.router);
+        this.app.use('/v1/license', LicenseRouter.router);
 
     }
 }

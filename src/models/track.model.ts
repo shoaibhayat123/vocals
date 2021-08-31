@@ -10,9 +10,11 @@ const TrackSchema = new Schema({
     bpm: { type: String, enum: bpmValues },
     releaseDate: { type: Date, default: null },
     description: { type: String },
-    tagged: { type:Boolean, default: false},
     imageUrl: { type: String },
-    trackUrl: { type: String },
+    stemUrl: { type: String },
+    wavUrl: { type: String },
+    taggedMp3Url: { type: String },
+    untaggedMp3Url: { type: String },
     belongsTo: { type: mongoose.Types.ObjectId, ref: 'User', default: null },
 
     deleted: { type: Boolean, default: false },
@@ -28,9 +30,11 @@ export interface ITrack extends mongoose.Document {
     bpm: bpmTypes,
     releaseDate: Date,
     description: string,
-    tagged: boolean,
     imageUrl: string,
-    trackUrl: string,
+    wavUrl: string | undefined,
+    untaggedMp3Url: string,
+    taggedMp3Url: string,
+    stemUrl: string,
     belongsTo: mongoose.Types.ObjectId | string | null,
     
 
@@ -54,7 +58,6 @@ TrackSchema.statics.getSearchableFields = function(): string[] {
         "mood",
         "bpm",
         "genre",
-        "tagged",
         "belongsTo"
     ];
 }
@@ -65,7 +68,6 @@ TrackSchema.statics.getClientFields = function(): string[] {
         "title",
         "mood",
         "bpm",
-        "tagged",
         "genre",
         "belongsTo",
         "deleted",
