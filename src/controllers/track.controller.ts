@@ -11,6 +11,7 @@ interface CreateTrackParams {
     title: string,
     genre: genreTypes,
     mood: moodTypes,
+    licenses: String[],
     bpm: bpmTypes,
     releaseDate: Date,
     description: string,
@@ -33,6 +34,7 @@ export interface CreateOrUpdateTrackParams {
     genre?: genreTypes,
     mood?: moodTypes,
     bpm?: bpmTypes,
+    licenses?: String[],
     releaseDate?: Date,
     description?: string,
     imageUrl?: string,
@@ -185,7 +187,7 @@ export class TrackController {
         query = { $and: [{ 'deleted': false }, query] };
         let data = await Track.find(
             query
-        );
+        ).populate('licenses')
         //data = data.length > 0 ? data[0] : null;
         return data;
     }

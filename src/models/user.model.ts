@@ -4,6 +4,7 @@ import mongoose, { Schema } from 'mongoose';
 import { createJwt, randomString, hashPassword, checkPassword } from '../shared';
 import { Role, RoleValues, Language, LanguageValues } from './enums';
 import { CONFIG, JWT_EXPIRY_SECONDS } from './constants';
+import { ITrackInfo } from './interfaces';
 
 const UserSchema = new Schema({
     role: { type: String, enum: RoleValues, default: Role.User },
@@ -24,7 +25,10 @@ const UserSchema = new Schema({
     country: { type: String },
     address: { type: String },
     isAcceptedTerm: { type: Boolean, default: false },
-    license_id: { type: Schema.Types.ObjectId, ref: 'License', default:null},
+    tracks : [{
+        track : { type: mongoose.Types.ObjectId, ref: 'Track'},
+        license : { type: mongoose.Types.ObjectId, ref: 'License' },
+    }],
 
     code: { type: String },
 
@@ -64,7 +68,7 @@ export interface IUser extends mongoose.Document {
     address: string,
     isAcceptedTerm: boolean,
     code: string,
-    license_id: string,
+    tracks: ITrackInfo[],
 
     deleted: boolean,
     deactivated: boolean,

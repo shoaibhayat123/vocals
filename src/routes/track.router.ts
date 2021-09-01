@@ -36,7 +36,8 @@ export class TrackRouter {
             if(track === null) { return res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             }))}
-            const license = await this.licenseController._findLicense(res.locals.license_id)
+            const license = res.locals.userTracks
+            console.log(license);
             var tracks: Array<ITrack>
             switch (license?.type) {
                 case licenseTypes.free:
@@ -93,7 +94,6 @@ export class TrackRouter {
             if(track === null) { return res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             }))}
-            console.log(track);
             const license = await this.licenseController._findLicense(res.locals.license_id)
             var tracks: Array<ITrack>
             switch (license?.type) {

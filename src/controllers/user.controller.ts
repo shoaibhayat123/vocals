@@ -6,6 +6,7 @@ import { createJwt, randomString } from "../shared";
 import { FileType, FileTypeValues, Gender, GenderValues, Role, RoleValues, SearchType, Sort, SortValues, StatusValues } from '../models/enums';
 // controllers
 import emailController, { EmailController } from '../controllers/email.controller';
+import { ITrackInfo } from '../models/interfaces';
 
 interface CreateUserParams {
     payload: {
@@ -33,7 +34,9 @@ interface CreateUserParams {
         title?: string,
         message?: string,
         approvedBy?: string,
-        approvedAt?: Date
+        approvedAt?: Date, 
+        tracks?: ITrackInfo[],
+
     }
 }
 
@@ -65,6 +68,8 @@ interface CreateOrUpdateUserParams {
         approvedAt?: Date,
         deleted?: boolean,
         deactivated?: boolean
+        tracks?: ITrackInfo[],
+
     }
 }
 
@@ -285,7 +290,6 @@ export class UserController {
             role: user.role,
             userId: user._id,
             langPref: user.langPref,
-            license_id: user.license_id
         };
     }
 
@@ -342,7 +346,7 @@ export class UserController {
         };
         const _query = { _id: user._id };
         const result = await User.findOneAndUpdate(_query, updateDoc, {
-            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl license_id "
+            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
                 + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
         }) as unknown as IUser;
         return result;

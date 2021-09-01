@@ -15,6 +15,8 @@ const TrackSchema = new Schema({
     wavUrl: { type: String },
     taggedMp3Url: { type: String },
     untaggedMp3Url: { type: String },
+    licenses: [{ type: mongoose.Types.ObjectId, ref: 'License', default: null }],
+
     belongsTo: { type: mongoose.Types.ObjectId, ref: 'User', default: null },
 
     deleted: { type: Boolean, default: false },
@@ -28,6 +30,7 @@ export interface ITrack extends mongoose.Document {
     genre: genreTypes,
     mood: moodTypes,
     bpm: bpmTypes,
+    licenses: String[],
     releaseDate: Date,
     description: string,
     imageUrl: string,
