@@ -80,13 +80,13 @@ export class LicenseRouter {
 
     private routes() {
         this.router.route("/get")
-            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization(),
+            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.User, Role.Admin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.get(req, res);
                 }));
 
         this.router.route("/get-by")
-            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization(),
+            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.User, Role.Admin]),
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.getBy(req, res);
                 }));

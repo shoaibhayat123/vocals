@@ -156,6 +156,7 @@ export class TrackController {
             }
         }
         query = { $and: [{ 'deleted': false }, query] };
+        
         let data = await Track.aggregate([{
             $facet: {
                 paginatedResult: [
@@ -176,7 +177,7 @@ export class TrackController {
                 "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
             }
         }]);
-        data = data.length > 0 ? data[0] : null;
+         data = data.length > 0 ? data[0] : null;
         return data;
     }
 

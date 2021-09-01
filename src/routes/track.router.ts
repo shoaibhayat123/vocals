@@ -15,6 +15,7 @@ import { Pagination } from '../models/shared';
 import { query } from 'express';
 import { CreateOrUpdateTrackParams } from '../controllers/track.controller';
 import { ITrack } from '../models/Track.model';
+import { licenseTypes } from '../models/enums/licenseTypes';
 
 export class TrackRouter {
     public router: express.Router;
@@ -31,10 +32,55 @@ export class TrackRouter {
     private async get(req, res) {
         try {
             const { search, type, sortKey } = req.query as any;
-            const track = await this.trackController.get(search, type,sortKey, await Pagination.pagination(req, 'CT'));
-            track === null ? res.status(404).send(new NotFoundError(`No record found`, {
+            const track:any = await this.trackController.get(search, type,sortKey, await Pagination.pagination(req, 'CT'));
+            if(track === null) { return res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
-            })) : res.json(track);
+            }))}
+            const license = await this.licenseController._findLicense(res.locals.license_id)
+            var tracks: Array<ITrack>
+            switch (license?.type) {
+                case licenseTypes.free:
+                    track.paginatedResult.forEach((e)=>[
+                        e.wavUrl = undefined,
+                        e.stemUrl = undefined,
+                        e.untaggedMp3Url = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
+                case licenseTypes.basic:
+                    track.paginatedResult.forEach((e)=>[
+                        e.wavUrl = undefined,
+                        e.stemUrl = undefined,
+                    ])
+                    tracks = track 
+                    return res.status(200).json({
+                        tracks
+                    })
+                case licenseTypes.premium:
+                    track.paginatedResult.forEach((e)=>[
+                        e.stemUrl = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
+                case licenseTypes.premiumStem:
+                    return res.status(200).json({
+                        track
+                    })
+                default:
+                    track.paginatedResult.forEach((e)=>[
+                        e.wavUrl = undefined,
+                        e.stemUrl = undefined,
+                        e.untaggedMp3Url = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
+            }
         } catch (error) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
@@ -43,24 +89,56 @@ export class TrackRouter {
     private async getBy(req, res) {
         try {
             const { search } = req.query as any;
-            const track:any = await this.trackController.getBy(search);
+            const track:any =  await this.trackController.getBy(search);
             if(track === null) { return res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             }))}
+            console.log(track);
             const license = await this.licenseController._findLicense(res.locals.license_id)
-            if (license === null) {
-                track.forEach((e)=>[
-                    e.wavUrl = undefined,
-                    e.stemUrl = undefined,
-                    e.taggedMp3Url = undefined,
-                ])
-                const tracks =<ITrack>track
-                return res.status(200).json({
-                    tracks
-                })
-
+            var tracks: Array<ITrack>
+            switch (license?.type) {
+                case licenseTypes.free:
+                    track.forEach((e)=>[
+                        e.wavUrl = undefined,
+                        e.stemUrl = undefined,
+                        e.untaggedMp3Url = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
+                case licenseTypes.basic:
+                    track.forEach((e)=>[
+                        e.wavUrl = undefined,
+                        e.stemUrl = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
+                case licenseTypes.premium:
+                    track.forEach((e)=>[
+                        e.stemUrl = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
+                case licenseTypes.premiumStem:
+                    return res.status(200).json({
+                        track
+                    })
+                default:
+                    track.forEach((e)=>[
+                        e.wavUrl = undefined,
+                        e.stemUrl = undefined,
+                        e.untaggedMp3Url = undefined,
+                    ])
+                    tracks = track
+                    return res.status(200).json({
+                        tracks
+                    })
             }
-            res.json(track);
         } catch (error) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
