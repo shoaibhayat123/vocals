@@ -45,9 +45,6 @@ export async function authentication(req: Request, res: Response, next: NextFunc
           message: `Logined user not found!`
         }));
       }
-      // const licenses = user.tracks.map((single)=>{
-      //   return single.license
-      // })
       res.locals.userTracks = user.tracks
       res.locals.jwtData = decodedToken.data;
       httpContext.set('jwtData', decodedToken.data);
