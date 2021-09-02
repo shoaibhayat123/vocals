@@ -185,10 +185,9 @@ export class TrackController {
 
     async returnGetByResponse(query): Promise<any | null> {
         query = { $and: [{ 'deleted': false }, query] };
-        let data = await Track.find(
+        let data = await Track.findOne(
             query
         ).populate('licenses')
-        //data = data.length > 0 ? data[0] : null;
         return data;
     }
 }
