@@ -87,8 +87,7 @@ var FAQRouter = /** @class */ (function () {
                     case 1:
                         contacts = _b.sent();
                         contacts === null ? res.status(404).send(new errors_1.NotFoundError("No record found", {
-                            message: "No record found",
-                            i18n: 'notExist'
+                            message: "No record found", i18n: 'notExist'
                         })) : res.json(contacts);
                         return [3 /*break*/, 3];
                     case 2:
@@ -112,8 +111,7 @@ var FAQRouter = /** @class */ (function () {
                     case 1:
                         contact = _a.sent();
                         contact === null ? res.status(404).send(new errors_1.NotFoundError("No record found", {
-                            message: "No record found",
-                            i18n: 'notExist'
+                            message: "No record found", i18n: 'notExist'
                         })) : res.json(contact);
                         return [3 /*break*/, 3];
                     case 2:

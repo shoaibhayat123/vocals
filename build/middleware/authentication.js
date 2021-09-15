@@ -95,6 +95,7 @@ function authentication(req, res, next) {
                                 message: "Logined user not found!"
                             }))];
                     }
+                    res.locals.userTracks = user.tracks;
                     res.locals.jwtData = decodedToken.data;
                     express_http_context_1.default.set('jwtData', decodedToken.data);
                     next();

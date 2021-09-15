@@ -65,6 +65,7 @@ var middleware_1 = require("../middleware");
 // controllers
 var user_controller_1 = __importDefault(require("../controllers/user.controller"));
 var email_controller_1 = __importDefault(require("../controllers/email.controller"));
+var oauth_controller_1 = __importDefault(require("../controllers/oauth.controller"));
 var enums_1 = require("../models/enums");
 var async_wrap_1 = require("../shared/async-wrap");
 var errors_1 = require("../errors");
@@ -73,9 +74,10 @@ var user_model_1 = require("../models/user.model");
 var shared_2 = require("../models/shared");
 var constants_1 = require("../models/constants");
 var UserRouter = /** @class */ (function () {
-    function UserRouter(userController, emailController) {
+    function UserRouter(userController, emailController, oAuthController) {
         this.userController = userController;
         this.emailController = emailController;
+        this.oAuthController = oAuthController;
         this.router = express.Router();
         this.middleware();
         this.routes();
@@ -118,8 +120,7 @@ var UserRouter = /** @class */ (function () {
                     case 3:
                         users = _e.sent();
                         users === null ? res.status(404).send(new errors_1.NotFoundError("No record found", {
-                            message: "No record found",
-                            i18n: 'notExist'
+                            message: "No record found", i18n: 'notExist'
                         })) : res.json(users);
                         return [3 /*break*/, 5];
                     case 4:
@@ -146,8 +147,7 @@ var UserRouter = /** @class */ (function () {
                     case 2:
                         user = _b.sent();
                         user === null ? res.status(404).send(new errors_1.NotFoundError("No record found", {
-                            message: "No record found",
-                            i18n: 'notExist'
+                            message: "No record found", i18n: 'notExist'
                         })) : res.json(user);
                         return [3 /*break*/, 4];
                     case 3:
@@ -223,9 +223,32 @@ var UserRouter = /** @class */ (function () {
                 }
             });
         }); }));
+        this.router.route("/create/google")
+            .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization(), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var user, error_4;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 2, , 3]);
+                        return [4 /*yield*/, this.oAuthController.createOAuthUser(req.body.langPref, req.body.token)];
+                    case 1:
+                        user = _a.sent();
+                        res.json({
+                            user: user
+                        });
+                        return [3 /*break*/, 3];
+                    case 2:
+                        error_4 = _a.sent();
+                        console.log({ error: error_4 });
+                        res.status(error_4.status || 500).send(!error_4.status ? new errors_1.InternalServerError("Something wrong") : error_4);
+                        return [3 /*break*/, 3];
+                    case 3: return [2 /*return*/];
+                }
+            });
+        }); }));
         this.router.route("/me")
             .get(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin, enums_1.Role.User]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var userId, users, error_4;
+            var userId, users, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -249,8 +272,8 @@ var UserRouter = /** @class */ (function () {
                         }
                         return [3 /*break*/, 4];
                     case 3:
-                        error_4 = _a.sent();
-                        res.status(error_4.status || 500).send(!error_4.status ? new errors_1.InternalServerError("Something wrong") : error_4);
+                        error_5 = _a.sent();
+                        res.status(error_5.status || 500).send(!error_5.status ? new errors_1.InternalServerError("Something wrong") : error_5);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -258,7 +281,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/profile")
             .patch(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin, enums_1.Role.User]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var token, user, error_5;
+            var token, user, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -278,8 +301,8 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_5 = _a.sent();
-                        res.status(error_5.status || 500).send(!error_5.status ? new errors_1.InternalServerError("Something wrong") : error_5);
+                        error_6 = _a.sent();
+                        res.status(error_6.status || 500).send(!error_6.status ? new errors_1.InternalServerError("Something wrong") : error_6);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -287,7 +310,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/edit")
             .patch(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin, enums_1.Role.User]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var search, token, user, error_6;
+            var search, token, user, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -311,9 +334,9 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_6 = _a.sent();
-                        console.log({ error: error_6 });
-                        res.status(error_6.status || 500).send(!error_6.status ? new errors_1.InternalServerError("Something wrong") : error_6);
+                        error_7 = _a.sent();
+                        console.log({ error: error_7 });
+                        res.status(error_7.status || 500).send(!error_7.status ? new errors_1.InternalServerError("Something wrong") : error_7);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -321,7 +344,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/login")
             .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.staticAuthentication, async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, email, password, search, user, error_7;
+            var _a, email, password, search, user, error_8;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -336,8 +359,8 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_7 = _b.sent();
-                        res.status(error_7.status || 500).send(!error_7.status ? new errors_1.InternalServerError("Something wrong") : error_7);
+                        error_8 = _b.sent();
+                        res.status(error_8.status || 500).send(!error_8.status ? new errors_1.InternalServerError("Something wrong") : error_8);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -345,7 +368,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/password/reset")
             .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.staticAuthentication, async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var email, user, resetToken, message, language, heading, payload, subject, filename, error_8;
+            var email, user, resetToken, message, language, heading, payload, subject, filename, error_9;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -377,8 +400,8 @@ var UserRouter = /** @class */ (function () {
                         res.json({ result: "Sent" });
                         return [3 /*break*/, 5];
                     case 4:
-                        error_8 = _a.sent();
-                        res.status(error_8.status || 500).send(!error_8.status ? new errors_1.InternalServerError("Something wrong") : error_8);
+                        error_9 = _a.sent();
+                        res.status(error_9.status || 500).send(!error_9.status ? new errors_1.InternalServerError("Something wrong") : error_9);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
@@ -386,7 +409,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/password/set")
             .post(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.staticAuthentication, async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var resetToken, password, user, error_9;
+            var resetToken, password, user, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -407,8 +430,8 @@ var UserRouter = /** @class */ (function () {
                         res.json({ result: "Reset succesfully" });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_9 = _a.sent();
-                        res.status(error_9.status || 500).send(!error_9.status ? new errors_1.InternalServerError("Something wrong") : error_9);
+                        error_10 = _a.sent();
+                        res.status(error_10.status || 500).send(!error_10.status ? new errors_1.InternalServerError("Something wrong") : error_10);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -418,4 +441,4 @@ var UserRouter = /** @class */ (function () {
     return UserRouter;
 }());
 exports.UserRouter = UserRouter;
-exports.default = new UserRouter(user_controller_1.default, email_controller_1.default);
+exports.default = new UserRouter(user_controller_1.default, email_controller_1.default, oauth_controller_1.default);
