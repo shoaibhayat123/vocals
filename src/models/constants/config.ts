@@ -58,6 +58,9 @@ export const CONFIG = {
     BCRYPT_REHASH_DATE: BCRYPT_REHASH_DATE || new Date("2019-11-26"),
     APPLICATION_EXPIRY_DAYS: 14,
     ROOT_FILE: "server",
+    Android_Client_ID: '997481825247-tem75qd0b3g51h17ned9ice4g84njvr1.apps.googleusercontent.com',
+	IOS_Client_ID: '997481825247-bj3kr6mcbfqrrogc646psmgjt5n0cgjr.apps.googleusercontent.com',
+	Web_Client_ID: '997481825247-pkjbqgliit4mfiuqmb9a4ref2gkeahvl.apps.googleusercontent.com',
     MAIL: {
         HOST: 'smtp.gmail.com',
         PORT: 465,

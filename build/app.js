@@ -18,6 +18,11 @@ var contact_router_1 = __importDefault(require("./routes/contact.router"));
 var session_router_1 = __importDefault(require("./routes/session.router"));
 var faq_router_1 = __importDefault(require("./routes/faq.router"));
 var database_1 = __importDefault(require("./config/database"));
+var upload_router_1 = __importDefault(require("./routes/upload.router"));
+var track_router_1 = __importDefault(require("./routes/track.router"));
+var license_router_1 = __importDefault(require("./routes/license.router"));
+var service_router_1 = __importDefault(require("./routes/service.router"));
+var constants_1 = require("./models/constants");
 // const logger = createLogger('app.ts');
 // _ is used as a variable name to ignore the fact that it's not read
 // import loadEnvs from './shared/load-envs';
@@ -53,6 +58,11 @@ var App = /** @class */ (function () {
         this.app.use(cors_1.default());
         this.app.use(express_http_context_1.default.middleware);
         this.app.use(request_ip_1.default.mw());
+        this.app.use(constants_1.CONFIG.IMAGEURLNAME, express_1.default.static(constants_1.CONFIG.IMAGEDIR));
+        this.app.use(constants_1.CONFIG.IMAGEURLNAME, express_1.default.static(constants_1.CONFIG.VIDEODIR));
+        this.app.use(constants_1.CONFIG.IMAGEURLNAME, express_1.default.static(constants_1.CONFIG.FILEDIR));
+        this.app.use(constants_1.CONFIG.IMAGEURLNAME, express_1.default.static(constants_1.CONFIG.UNTAGAUDIODIR));
+        this.app.use(constants_1.CONFIG.IMAGEURLNAME, express_1.default.static(constants_1.CONFIG.TAGAUDIODIR));
         // default options
         this.app.use(express_fileupload_1.default({
             // useTempFiles: true,
@@ -77,6 +87,10 @@ var App = /** @class */ (function () {
         this.app.use('/v1/session', session_router_1.default.router);
         this.app.use('/v1/contact', contact_router_1.default.router);
         this.app.use('/v1/faq', faq_router_1.default.router);
+        this.app.use('/v1/upload', upload_router_1.default.router);
+        this.app.use('/v1/track', track_router_1.default.router);
+        this.app.use('/v1/license', license_router_1.default.router);
+        this.app.use('/v1/service', service_router_1.default.router);
     };
     return App;
 }());

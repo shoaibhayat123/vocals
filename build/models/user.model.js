@@ -82,6 +82,10 @@ var UserSchema = new mongoose_1.Schema({
     country: { type: String },
     address: { type: String },
     isAcceptedTerm: { type: Boolean, default: false },
+    tracks: [{
+            track: { type: mongoose_1.default.Types.ObjectId, ref: 'Track' },
+            license: { type: mongoose_1.default.Types.ObjectId, ref: 'License' },
+        }],
     code: { type: String },
     deleted: { type: Boolean, default: false },
     deactivated: { type: Boolean, default: false },
@@ -134,6 +138,7 @@ UserSchema.statics.getClientFields = function () {
         "country",
         "address",
         "isAcceptedTerm",
+        "license_id",
         "code",
         "approvedAt",
         "approvedBy",

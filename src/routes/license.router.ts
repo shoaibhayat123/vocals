@@ -30,7 +30,7 @@ export class LicenseRouter {
             contacts === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(contacts);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -42,7 +42,7 @@ export class LicenseRouter {
             contact === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(contact);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -51,7 +51,7 @@ export class LicenseRouter {
         try {
             const result = await this.licenseController.create({ payload: req.body });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             console.log({error});
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
@@ -62,7 +62,7 @@ export class LicenseRouter {
             var { search } = req.query as any;
             const result = await this.licenseController.edit({  query: { id: search },payload: req.body });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             console.log({error});
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
@@ -73,7 +73,7 @@ export class LicenseRouter {
             const query = req.query as any;
             const result = await this.licenseController.delete({ query: query });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }

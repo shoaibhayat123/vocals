@@ -5,6 +5,7 @@ import { sanitizeBody, sanitizeQuery, authentication, authorization, staticAuthe
 // controllers
 import userController, { UserController } from '../controllers/user.controller';
 import emailController, { EmailController } from '../controllers/email.controller';
+import oAuthController,{ OAuthController } from '../controllers/oauth.controller';
 // model or interfaces
 import { IAuthenticatedResponse, IAuthorizedResponse } from '../models/interfaces';
 
@@ -20,7 +21,8 @@ export class UserRouter {
     public router: express.Router;
     constructor(
         private userController: UserController,
-        private emailController: EmailController
+        private emailController: EmailController,
+        private oAuthController: OAuthController,
     ) {
         this.router = express.Router();
         this.middleware();
@@ -109,6 +111,19 @@ export class UserRouter {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }))
+        this.router.route("/create/google")
+        .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization(),
+            asyncWrap<IAuthenticatedResponse>(async (req, res) => {
+                try {
+                    const user = await this.oAuthController.createOAuthUser(req.body.langPref,req.body.token);
+                    res.json({
+                        user
+                    });
+                } catch (error) {
+                    console.log({ error });
+                    res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
+                }
+            }))
 
         this.router.route("/me")
             .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.SuperAdmin, Role.Admin, Role.User]),
@@ -242,4 +257,4 @@ export class UserRouter {
     }
 }
 
-export default new UserRouter(userController, emailController);
+export default new UserRouter(userController, emailController,oAuthController);

@@ -67,6 +67,7 @@ var constants_1 = require("../models/constants");
 chai.use(chai_http_1.default);
 var tokenFile = require('../tests/authTokenCheck.spec');
 var uuid = uuid_1.v4();
+var adminToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InJvbGUiOiJzdXBlciBhZG1pbiIsInVzZXJJZCI6IjYxMjc2NjU5MzlmM2ZhMWE2NGUxMGI1NyJ9LCJpYXQiOjE2Mjk5NzIwNTcsImV4cCI6MTYzMDIzMTI1N30.Xglu5Ny7y8OmHFY0NrH96XJld7qnHkQiEHXogDtueJY';
 describe('User Sign Up', function () {
     it('should sign up the user', function () { return __awaiter(void 0, void 0, void 0, function () {
         var req;
@@ -77,7 +78,7 @@ describe('User Sign Up', function () {
                         .set('authorization', "Bearer " + constants_1.CONFIG.STATIC_TOKEN)
                         .send({
                         fullName: uuid,
-                        userName: uuid,
+                        userName: "" + (uuid + Math.random()),
                         email: uuid + "@gmail.com",
                         password: "abc@123",
                         phone_1: "1111111455",
@@ -156,6 +157,150 @@ describe('User Signin', function () {
                         password: 'abc@1234',
                     })];
                 case 1:
+                    req = _a.sent();
+                    expect(req).not.to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});
+describe('User Edit', function () {
+    it('should edit username', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
+                            .patch('v1/user/profile?search=6124e6396874c027101ecea8')
+                            .set('authorization', "Bearer " + token)
+                            .send({
+                            userName: "" + uuid,
+                        })];
+                case 2:
+                    req = _a.sent();
+                    expect(req).to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should not edit username', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
+                            .patch('v1/user/profile?search=6124e6396874c027101ecea8')
+                            .set('authorization', "Bearer " + token)
+                            .send({
+                            userName: "" + uuid
+                        })];
+                case 2:
+                    req = _a.sent();
+                    expect(req).not.to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});
+describe('User Profile', function () {
+    it('should get user profile', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
+                            .get('v1/user/me')
+                            .set('authorization', "Bearer " + token)];
+                case 2:
+                    req = _a.sent();
+                    expect(req).to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should not get user profile', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
+                            .get('v1/user/me')
+                            .set('authorization', "Bearer " + (token + 1))];
+                case 2:
+                    req = _a.sent();
+                    expect(req).not.to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});
+describe('List Of Users (Admin Only)', function () {
+    it('should get list of users', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, chai.request('http://localhost:3005/')
+                        .get('v1/user/get')
+                        .set('authorization', "Bearer " + adminToken)];
+                case 1:
+                    req = _a.sent();
+                    expect(req).to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should not get list of users', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
+                            .get('v1/user/get')
+                            .set('authorization', "Bearer " + token)];
+                case 2:
+                    req = _a.sent();
+                    expect(req).not.to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+});
+describe('Get by userId (Admin Only)', function () {
+    it('should get user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, chai.request('http://localhost:3005/')
+                        .get('v1/user/get-by?search=61265cde2c87152be04a77ae')
+                        .set('authorization', "Bearer " + adminToken)];
+                case 1:
+                    req = _a.sent();
+                    expect(req).to.have.status(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('should not get user', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var token, req;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, tokenFile.tokenExtractor()];
+                case 1:
+                    token = _a.sent();
+                    return [4 /*yield*/, chai.request('http://localhost:3005/')
+                            .get('v1/user/get-by?search=61265cde2c87152be04a77ae')
+                            .set('authorization', "Bearer " + token)];
+                case 2:
                     req = _a.sent();
                     expect(req).not.to.have.status(200);
                     return [2 /*return*/];

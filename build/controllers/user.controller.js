@@ -323,7 +323,7 @@ var UserController = /** @class */ (function () {
                             fullName: user.fullName,
                             role: user.role,
                             userId: user._id,
-                            langPref: user.langPref
+                            langPref: user.langPref,
                         }];
                 }
             });
@@ -332,7 +332,7 @@ var UserController = /** @class */ (function () {
     UserController.prototype.edit = function (role, userId, _a) {
         var query = _a.query, payload = _a.payload;
         return __awaiter(this, void 0, void 0, function () {
-            var user, user_1, updateDoc, _query, result;
+            var user, user_1, isUnique, updateDoc, _query, result;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -364,6 +364,19 @@ var UserController = /** @class */ (function () {
                         }
                         _b.label = 3;
                     case 3:
+                        if (!payload.userName) return [3 /*break*/, 5];
+                        payload.userName = payload.userName.toLocaleLowerCase();
+                        return [4 /*yield*/, this.userNameIsUnique(payload.userName)];
+                    case 4:
+                        isUnique = _b.sent();
+                        if (isUnique === false) {
+                            throw new errors_1.BadRequestError("Cannot edit user, user name already in use", {
+                                message: 'Cannot edit user, user name already in use',
+                                payload: payload,
+                            });
+                        }
+                        _b.label = 5;
+                    case 5:
                         // if (payload.role && (RoleValues.indexOf(payload.role) === -1 || payload.role === Role.Client) {
                         //     throw new BadRequestError(`Role must be in ${RoleValues}, but client role not valid for auth operations`, {
                         //         message: `Role must be in ${RoleValues}, but client role not valid for auth operations`,
@@ -380,10 +393,10 @@ var UserController = /** @class */ (function () {
                         updateDoc = __assign({}, payload);
                         _query = { _id: user._id };
                         return [4 /*yield*/, user_model_1.User.findOneAndUpdate(_query, updateDoc, {
-                                upsert: true, new: true, useFindAndModify: false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
+                                upsert: true, new: true, useFindAndModify: false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
                                     + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
                             })];
-                    case 4:
+                    case 6:
                         result = _b.sent();
                         return [2 /*return*/, result];
                 }
