@@ -49,7 +49,7 @@ export class UserRouter {
             users === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(users);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -62,7 +62,7 @@ export class UserRouter {
             user === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(user);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -90,7 +90,7 @@ export class UserRouter {
         //                 data === null ? res.status(404).send(new NotFoundError(`No record found`, {
         //                     message: `No record found`, i18n: 'notExist'
         //                 })) : res.json(data);
-        //             } catch (error) {
+        //             } catch (error:any) {
         //                 res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         //             }
         //         }));
@@ -106,7 +106,7 @@ export class UserRouter {
                         res.json({
                             user
                         });
-                    } catch (error) {
+                    } catch (error:any) {
                         console.log({ error });
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
@@ -119,7 +119,7 @@ export class UserRouter {
                     res.json({
                         user
                     });
-                } catch (error) {
+                } catch (error:any) {
                     console.log({ error });
                     res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                 }
@@ -141,7 +141,7 @@ export class UserRouter {
                                 users
                             });
                         }
-                    } catch (error) {
+                    } catch (error:any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));
@@ -159,7 +159,7 @@ export class UserRouter {
                         res.json({
                             user
                         });
-                    } catch (error) {
+                    } catch (error:any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));
@@ -186,7 +186,7 @@ export class UserRouter {
                         res.json({
                             user
                         });
-                    } catch (error) {
+                    } catch (error:any) {
                         console.log({ error });
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
@@ -202,7 +202,7 @@ export class UserRouter {
                         res.json({
                             user
                         });
-                    } catch (error) {
+                    } catch (error:any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));
@@ -231,7 +231,7 @@ export class UserRouter {
                         await this.emailController.send(subject, payload, user.email, '', filename, resetToken);
                         // await this.emailController.sendUserResetPasswordEmail({ user, resetToken });
                         res.json({ result: "Sent" });
-                    } catch (error) {
+                    } catch (error:any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));
@@ -250,7 +250,7 @@ export class UserRouter {
                         }
                         await user.setPassword(password);
                         res.json({ result: "Reset succesfully" });
-                    } catch (error) {
+                    } catch (error:any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));

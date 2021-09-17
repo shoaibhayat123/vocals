@@ -37,7 +37,7 @@ export class TrackRouter {
                 message: `No record found`, i18n: 'notExist'
             }))}
             res.json(track)
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -99,7 +99,7 @@ export class TrackRouter {
             }  
             res.json(track)
             
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -108,7 +108,7 @@ export class TrackRouter {
         try {
             const result = await this.trackController.create({ payload: req.body });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             console.log({error});
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
@@ -127,7 +127,7 @@ export class TrackRouter {
             }
             const result = await this.trackController.edit({  query: { id: search },payload: req.body });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -145,7 +145,7 @@ export class TrackRouter {
             }
             const result = await this.trackController.delete({ query: query });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }

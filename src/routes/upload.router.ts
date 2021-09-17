@@ -40,7 +40,7 @@ export class UploadRouter {
                         return res.json({
                             url
                         });
-                    } catch (error) {
+                    } catch (error:any) {
                         return res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));

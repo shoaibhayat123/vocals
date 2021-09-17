@@ -38,7 +38,7 @@ export class SessionRouter {
                                 session
                             });
                         }
-                    } catch (error) {
+                    } catch (error: any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));
@@ -64,7 +64,7 @@ export class SessionRouter {
                         res.json({
                             session
                         });
-                    } catch (error) {
+                    } catch (error: any) {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));

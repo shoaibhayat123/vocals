@@ -30,7 +30,7 @@ export class ServiceRouter {
             contacts === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(contacts);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -42,7 +42,7 @@ export class ServiceRouter {
             contact === null ? res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             })) : res.json(contact);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
@@ -51,7 +51,7 @@ export class ServiceRouter {
         try {
             const result = await this.serviceController.create({ payload: req.body });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             console.log({error});
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
@@ -62,7 +62,7 @@ export class ServiceRouter {
             var { search } = req.query as any;
             const result = await this.serviceController.edit({  query: { id: search },payload: req.body });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             console.log({error});
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
@@ -73,7 +73,7 @@ export class ServiceRouter {
             const query = req.query as any;
             const result = await this.serviceController.delete({ query: query });
             res.json(result);
-        } catch (error) {
+        } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
         }
     }
