@@ -16,6 +16,8 @@ import { me } from '../shared';
 import { User } from '../models/user.model';
 import { Pagination } from '../models/shared';
 import { TEMPLATES } from '../models/constants';
+import serviceController, { ServiceController } from '../controllers/service.controller';
+import trackController,{ TrackController } from '../controllers/track.controller';
 
 export class UserRouter {
     public router: express.Router;
@@ -23,6 +25,8 @@ export class UserRouter {
         private userController: UserController,
         private emailController: EmailController,
         private oAuthController: OAuthController,
+        private serviceController: ServiceController,
+        private trackController: TrackController,
     ) {
         this.router = express.Router();
         this.middleware();
@@ -40,6 +44,22 @@ export class UserRouter {
         }
         return decodedToken.data;
     }
+
+    private async dashboard(req, res) {
+        try {
+            let users = await this.userController.getCountOfUsers();
+            if(users === null){ users = [0]}
+            let services = await this.serviceController.getCountOfServices();
+            if(services === null) {services = [0]}
+            let tracks = await this.trackController.getCountOfTracks();
+            if(tracks === null){ tracks = [0]}
+            const data = {users,services,tracks}
+            res.json(data)
+        } catch (error:any) {
+            res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
+        }
+    }
+
 
     private async get(req, res) {
         try {
@@ -80,20 +100,11 @@ export class UserRouter {
                     await this.getBy(req, res);
                 }));
 
-        // this.router.route("/dashboard")
-        //     .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.Admin, Role.Rider]),
-        //         asyncWrap<IAuthorizedResponse>(async (req, res) => {
-        //             try {
-        //                 const user = await this.getLoginUser(req, res);
-        //                 const { search } = req.query as any;
-        //                 const data = await this.userController.dashboard(user, search);
-        //                 data === null ? res.status(404).send(new NotFoundError(`No record found`, {
-        //                     message: `No record found`, i18n: 'notExist'
-        //                 })) : res.json(data);
-        //             } catch (error:any) {
-        //                 res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
-        //             }
-        //         }));
+        this.router.route("/dashboard")
+            .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.SuperAdmin,Role.Admin]),
+                asyncWrap<IAuthorizedResponse>(async (req, res) => {
+                   await this.dashboard(req, res)
+                }));
 
         this.router.route("/create")
             .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization(),
@@ -257,4 +268,4 @@ export class UserRouter {
     }
 }
 
-export default new UserRouter(userController, emailController,oAuthController);
+export default new UserRouter(userController, emailController,oAuthController, serviceController,trackController);

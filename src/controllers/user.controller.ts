@@ -529,6 +529,23 @@ export class UserController {
             langPref: user.langPref
         };
     }
+    
+    async getCountOfUsers(){
+        let data = await User.aggregate([{
+            $facet: {
+                totalCount: [
+                    { $count: 'totalCount' }
+                ]
+            }
+        },
+        {
+            $project: {
+                "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
+            }
+        }]);
+        data = data.length > 0 ? data[0] : null;
+        return data;
+    }
 
     async notifyNewUser(email: string) {
         const user = await User.findOne({ email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "

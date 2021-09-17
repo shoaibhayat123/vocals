@@ -135,6 +135,23 @@ export class TrackController {
         }
     }
 
+    async getCountOfTracks(){
+        let data = await Track.aggregate([{
+            $facet: {
+                totalCount: [
+                    { $count: 'totalCount' }
+                ]
+            }
+        },
+        {
+            $project: {
+                "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
+            }
+        }]);
+        data = data.length > 0 ? data[0] : null;
+        return data;
+    }
+
     async _findTrack(search: string) {
         let query = { $or: [{ '_id': mongoose.Types.ObjectId(search) }] };
         query = { $and: [{ 'deleted': false }, query] } as any;
