@@ -4,6 +4,7 @@ import * as express from 'express';
 import { sanitizeBody, sanitizeQuery, authentication, authorization, staticAuthentication, trimQueryWhiteSpace, trimBodyWhiteSpace } from '../middleware'
 // controllers
 import orderController, { OrderController } from '../controllers/order.controller';
+import userController, { UserController } from '../controllers/user.controller';
 // routes
 import userRouter, { UserRouter } from './user.router';
 // model or interfaces
@@ -17,6 +18,7 @@ import { Pagination } from '../models/shared';
 import { me } from '../shared';
 import { CONFIG } from '../models/constants';
 import { User } from '../models/user.model';
+import { error } from 'console';
 
 // payment
 //const stripe = require('stripe')(CONFIG.STRIPE_SECRET_KEY_SANDBOX);
@@ -26,6 +28,7 @@ const stripe = Stripe('sk_test_51J7GFfBJGFaAOAxJxlhRJaqliTAhyKGK75tR7YWx5ad9TkKl
 export class OrderRouter {
     public router: express.Router;
     constructor(private orderController: OrderController,
+        private userController: UserController,
         private userRouter: UserRouter) {
         this.router = express.Router();
         this.middleware();
@@ -161,6 +164,11 @@ export class OrderRouter {
                     let error_message = 'Please try again! Payment failed';
                     try {
                         const user = await this.userRouter.getLoginUser(req, res);
+                        const userForEdit:any = await this.userController.me(user.userId)
+                        if(userForEdit === null){
+                           return res.status(401).json({ error : "user not found"});
+                        }
+                        
                         // const paymentMethod = await stripe.paymentMethods.retrieve(
                         //     req.body.payment_id
                         // );
@@ -197,23 +205,30 @@ export class OrderRouter {
                                     token_id: req.body.token_id
                                 }
                             });
+                            
+                            order.tracks.forEach((track)=>{
+                            userForEdit.tracks.push({track: track.track_id,license: track.license_id})
+                            })
+                            const userEdited = await this.userController.edit(user.role, user.userId, {
+                                query: { id: user.userId },
+                                payload: userForEdit.tracks
+                            });
                             res.json({
                                 order
                             });}
-                        // } else {
-                        //     res.status(400).send(new BadRequestError(error_message, {
-                        //         message: error_message
-                        //     }));
-                        // }
+                         else {
+                            res.status(400).send(new BadRequestError(error_message, {
+                                message: error_message
+                            }));
+                        }
                     } catch (error: any) {
-                        // let err = error ? error.raw ? error.raw.message ? error.raw.message : error_message : error_message : error_message;
-                        // res.status(error.status || error.statusCode || 400).send(new BadRequestError(err, {
-                        //     message: err
-                        // }));
-                        res.send(error.message);
+                        let err = error ? error.raw ? error.raw.message ? error.raw.message : error_message : error_message : error_message;
+                        res.status(error.status || error.statusCode || 400).send(new BadRequestError(err, {
+                            message: err
+                        }));
                     }
                 }));
     }
 }
 
-export default new OrderRouter(orderController, userRouter);
+export default new OrderRouter(orderController,userController, userRouter,);
