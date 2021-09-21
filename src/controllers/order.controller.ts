@@ -509,6 +509,25 @@ export class OrderController {
         }
         return result;
     }
+    async getCountOfTracksDownloaded(){
+        let data = await Order.aggregate([ {$match: {"tracks":{$exists:true}}},
+        {
+            $project: {
+                totalTracks: { $size: "$tracks" },
+                totalAmountSpent : {$sum: "$totalAmount"}
+            },
+        },{ $group: {
+            "_id": null,
+            "totalTracksDownloaded": {
+                "$sum": "$totalTracks"
+            },
+            "totalAmountSpent":{
+                "$sum": "$totalAmountSpent"
+            }
+        } }]);
+        //data = data.length > 0 ? data[0] : null;
+        return data;
+    }
 
     async _findOrder(search: string) {
         const query = { $or: [{ '_id': mongoose.Types.ObjectId(search) }, { 'customer_id': mongoose.Types.ObjectId(search) }] } as any;

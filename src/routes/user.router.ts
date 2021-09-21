@@ -18,6 +18,8 @@ import { Pagination } from '../models/shared';
 import { TEMPLATES } from '../models/constants';
 import serviceController, { ServiceController } from '../controllers/service.controller';
 import trackController,{ TrackController } from '../controllers/track.controller';
+import orderController, { OrderController } from '../controllers/order.controller';
+
 
 export class UserRouter {
     public router: express.Router;
@@ -27,6 +29,8 @@ export class UserRouter {
         private oAuthController: OAuthController,
         private serviceController: ServiceController,
         private trackController: TrackController,
+        private orderController: OrderController,
+
     ) {
         this.router = express.Router();
         this.middleware();
@@ -53,7 +57,9 @@ export class UserRouter {
             if(services === null) {services = [0]}
             let tracks = await this.trackController.getCountOfTracks();
             if(tracks === null){ tracks = [0]}
-            const data = {users,services,tracks}
+            let orders = await this.orderController.getCountOfTracksDownloaded();
+            if(orders === null){ orders = [0]}
+            const data = {users,services,tracks,orders}
             res.json(data)
         } catch (error:any) {
             res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
@@ -268,4 +274,4 @@ export class UserRouter {
     }
 }
 
-export default new UserRouter(userController, emailController,oAuthController, serviceController,trackController);
+export default new UserRouter(userController, emailController,oAuthController, serviceController,trackController,orderController);
