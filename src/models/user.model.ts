@@ -5,6 +5,7 @@ import { createJwt, randomString, hashPassword, checkPassword } from '../shared'
 import { Role, RoleValues, Language, LanguageValues } from './enums';
 import { CONFIG, JWT_EXPIRY_SECONDS } from './constants';
 import { ITrackInfo } from './interfaces';
+import { type } from 'os';
 
 const UserSchema = new Schema({
     role: { type: String, enum: RoleValues, default: Role.User },
@@ -29,6 +30,7 @@ const UserSchema = new Schema({
         track : { type: mongoose.Types.ObjectId, ref: 'Track'},
         license : { type: mongoose.Types.ObjectId, ref: 'License' },
     }],
+    wishList : [{ type: mongoose.Types.ObjectId, ref: 'Track', default: null}],
 
     code: { type: String },
 
@@ -69,6 +71,7 @@ export interface IUser extends mongoose.Document {
     isAcceptedTerm: boolean,
     code: string,
     tracks: ITrackInfo[],
+    wishList: String[],
 
     deleted: boolean,
     deactivated: boolean,
@@ -141,6 +144,7 @@ UserSchema.statics.getClientFields = function(): string[] {
         "dob",
         "age",
         "imageUrl",
+        "wishList",
         "city",
         "state",
         "country",

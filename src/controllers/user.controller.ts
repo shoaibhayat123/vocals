@@ -36,6 +36,8 @@ interface CreateUserParams {
         approvedBy?: string,
         approvedAt?: Date, 
         tracks?: ITrackInfo[],
+        wishList?: String[],
+
 
     }
 }
@@ -69,6 +71,8 @@ interface CreateOrUpdateUserParams {
         deleted?: boolean,
         deactivated?: boolean
         tracks?: ITrackInfo[],
+        wishList?: String[],
+
 
     }
 }
@@ -346,7 +350,7 @@ export class UserController {
         };
         const _query = { _id: user._id };
         const result = await User.findOneAndUpdate(_query, updateDoc, {
-            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
+            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks wishList "
                 + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
         }) as unknown as IUser;
         return result;
