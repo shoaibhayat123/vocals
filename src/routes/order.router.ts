@@ -75,6 +75,19 @@ export class OrderRouter {
         }
     }
 
+    private async myOrders(req, res) {
+        try {
+            const user = await this.userRouter.getLoginUser(req, res);
+            const order = await this.orderController.myOrders(user);
+            order === null ? res.status(404).send(new NotFoundError(`No record found`, {
+                message: `No record found`, i18n: 'notExist'
+            })) : res.json(order);
+        } catch (error:any) {
+            console.log('error', error);
+            res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
+        }
+    }
+
     private async checkStripeCardValidation(req, res) {
         // if (!req.body || !req.body.card_number || !req.body.card_expire_month
         //     || !req.body.card_expire_year || !req.body.card_code || !req.body.amount
@@ -121,6 +134,12 @@ export class OrderRouter {
                 asyncWrap<IAuthorizedResponse>(async (req, res) => {
                     await this.myCart(req, res);
                 }));
+        
+        this.router.route("/myorders")
+        .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.SuperAdmin, Role.Admin, Role.User]),
+            asyncWrap<IAuthorizedResponse>(async (req, res) => {
+                await this.myOrders(req, res);
+            }));
 
         this.router.route("/create")
             .post(sanitizeBody, trimBodyWhiteSpace, authentication, authorization([Role.SuperAdmin, Role.Admin, Role.User]),

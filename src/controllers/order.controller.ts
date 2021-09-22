@@ -185,6 +185,7 @@ export class OrderController {
         if (user.role !== Role.SuperAdmin && user.role !== Role.Admin) {
             query = { $and: [{ role: user.role }, query] };
         }
+        
         // let query = {};
         // const filter = Order.getSearchableFieldsFilter();
         // if (search !== undefined && typeof search === 'string') {
@@ -203,6 +204,11 @@ export class OrderController {
         const statuses = [Status.pending];
         let query = { customer_id: mongoose.Types.ObjectId(user.userId) } as any;
         query = { $and: [{ status: { $in: statuses } }, query] };
+        return await this.returnGetByResponse(user, query);
+    }
+
+    async myOrders(user: any): Promise<IOrder | null> {
+        let query = { customer_id: mongoose.Types.ObjectId(user.userId) } as any;
         return await this.returnGetByResponse(user, query);
     }
 
