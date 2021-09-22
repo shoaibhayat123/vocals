@@ -211,7 +211,7 @@ export class UserController {
 
     async me(id: string): Promise<IUser | null> {
         return await User.findById({ '_id': id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
-            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt");
+            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt").populate('wishList');
     }
 
     async create({ payload }: CreateUserParams, from: any) {
