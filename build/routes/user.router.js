@@ -73,11 +73,17 @@ var shared_1 = require("../shared");
 var user_model_1 = require("../models/user.model");
 var shared_2 = require("../models/shared");
 var constants_1 = require("../models/constants");
+var service_controller_1 = __importDefault(require("../controllers/service.controller"));
+var track_controller_1 = __importDefault(require("../controllers/track.controller"));
+var order_controller_1 = __importDefault(require("../controllers/order.controller"));
 var UserRouter = /** @class */ (function () {
-    function UserRouter(userController, emailController, oAuthController) {
+    function UserRouter(userController, emailController, oAuthController, serviceController, trackController, orderController) {
         this.userController = userController;
         this.emailController = emailController;
         this.oAuthController = oAuthController;
+        this.serviceController = serviceController;
+        this.trackController = trackController;
+        this.orderController = orderController;
         this.router = express.Router();
         this.middleware();
         this.routes();
@@ -102,9 +108,52 @@ var UserRouter = /** @class */ (function () {
             });
         });
     };
+    UserRouter.prototype.dashboard = function (req, res) {
+        return __awaiter(this, void 0, void 0, function () {
+            var users, services, tracks, orders, data, error_1;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 5, , 6]);
+                        return [4 /*yield*/, this.userController.getCountOfUsers()];
+                    case 1:
+                        users = _a.sent();
+                        if (users === null) {
+                            users = [0];
+                        }
+                        return [4 /*yield*/, this.serviceController.getCountOfServices()];
+                    case 2:
+                        services = _a.sent();
+                        if (services === null) {
+                            services = [0];
+                        }
+                        return [4 /*yield*/, this.trackController.getCountOfTracks()];
+                    case 3:
+                        tracks = _a.sent();
+                        if (tracks === null) {
+                            tracks = [0];
+                        }
+                        return [4 /*yield*/, this.orderController.getCountOfTracksDownloaded()];
+                    case 4:
+                        orders = _a.sent();
+                        if (orders === null) {
+                            orders = [0];
+                        }
+                        data = { users: users, services: services, tracks: tracks, orders: orders };
+                        res.json(data);
+                        return [3 /*break*/, 6];
+                    case 5:
+                        error_1 = _a.sent();
+                        res.status(error_1.status || 500).send(!error_1.status ? new errors_1.InternalServerError("Something wrong") : error_1);
+                        return [3 /*break*/, 6];
+                    case 6: return [2 /*return*/];
+                }
+            });
+        });
+    };
     UserRouter.prototype.get = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var user, _a, search, role, type, sortKey, users, _b, _c, _d, error_1;
+            var user, _a, search, role, type, sortKey, users, _b, _c, _d, error_2;
             return __generator(this, function (_e) {
                 switch (_e.label) {
                     case 0:
@@ -124,8 +173,8 @@ var UserRouter = /** @class */ (function () {
                         })) : res.json(users);
                         return [3 /*break*/, 5];
                     case 4:
-                        error_1 = _e.sent();
-                        res.status(error_1.status || 500).send(!error_1.status ? new errors_1.InternalServerError("Something wrong") : error_1);
+                        error_2 = _e.sent();
+                        res.status(error_2.status || 500).send(!error_2.status ? new errors_1.InternalServerError("Something wrong") : error_2);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
@@ -134,7 +183,7 @@ var UserRouter = /** @class */ (function () {
     };
     UserRouter.prototype.getBy = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var tokenUser, _a, search, role, user, error_2;
+            var tokenUser, _a, search, role, user, error_3;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -151,8 +200,8 @@ var UserRouter = /** @class */ (function () {
                         })) : res.json(user);
                         return [3 /*break*/, 4];
                     case 3:
-                        error_2 = _b.sent();
-                        res.status(error_2.status || 500).send(!error_2.status ? new errors_1.InternalServerError("Something wrong") : error_2);
+                        error_3 = _b.sent();
+                        res.status(error_3.status || 500).send(!error_3.status ? new errors_1.InternalServerError("Something wrong") : error_3);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -183,23 +232,20 @@ var UserRouter = /** @class */ (function () {
                 }
             });
         }); }));
-        // this.router.route("/dashboard")
-        //     .get(sanitizeQuery, trimQueryWhiteSpace, authentication, authorization([Role.Admin, Role.Rider]),
-        //         asyncWrap<IAuthorizedResponse>(async (req, res) => {
-        //             try {
-        //                 const user = await this.getLoginUser(req, res);
-        //                 const { search } = req.query as any;
-        //                 const data = await this.userController.dashboard(user, search);
-        //                 data === null ? res.status(404).send(new NotFoundError(`No record found`, {
-        //                     message: `No record found`, i18n: 'notExist'
-        //                 })) : res.json(data);
-        //             } catch (error) {
-        //                 res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
-        //             }
-        //         }));
+        this.router.route("/dashboard")
+            .get(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.dashboard(req, res)];
+                    case 1:
+                        _a.sent();
+                        return [2 /*return*/];
+                }
+            });
+        }); }));
         this.router.route("/create")
             .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization(), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var user, error_3;
+            var user, error_4;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -215,9 +261,9 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_3 = _a.sent();
-                        console.log({ error: error_3 });
-                        res.status(error_3.status || 500).send(!error_3.status ? new errors_1.InternalServerError("Something wrong") : error_3);
+                        error_4 = _a.sent();
+                        console.log({ error: error_4 });
+                        res.status(error_4.status || 500).send(!error_4.status ? new errors_1.InternalServerError("Something wrong") : error_4);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -225,7 +271,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/create/google")
             .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization(), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var user, error_4;
+            var user, error_5;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -238,9 +284,9 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_4 = _a.sent();
-                        console.log({ error: error_4 });
-                        res.status(error_4.status || 500).send(!error_4.status ? new errors_1.InternalServerError("Something wrong") : error_4);
+                        error_5 = _a.sent();
+                        console.log({ error: error_5 });
+                        res.status(error_5.status || 500).send(!error_5.status ? new errors_1.InternalServerError("Something wrong") : error_5);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -248,7 +294,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/me")
             .get(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin, enums_1.Role.User]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var userId, users, error_5;
+            var userId, users, error_6;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -272,8 +318,8 @@ var UserRouter = /** @class */ (function () {
                         }
                         return [3 /*break*/, 4];
                     case 3:
-                        error_5 = _a.sent();
-                        res.status(error_5.status || 500).send(!error_5.status ? new errors_1.InternalServerError("Something wrong") : error_5);
+                        error_6 = _a.sent();
+                        res.status(error_6.status || 500).send(!error_6.status ? new errors_1.InternalServerError("Something wrong") : error_6);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -281,7 +327,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/profile")
             .patch(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin, enums_1.Role.User]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var token, user, error_6;
+            var token, user, error_7;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -301,8 +347,8 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_6 = _a.sent();
-                        res.status(error_6.status || 500).send(!error_6.status ? new errors_1.InternalServerError("Something wrong") : error_6);
+                        error_7 = _a.sent();
+                        res.status(error_7.status || 500).send(!error_7.status ? new errors_1.InternalServerError("Something wrong") : error_7);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -310,7 +356,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/edit")
             .patch(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.authentication, middleware_1.authorization([enums_1.Role.SuperAdmin, enums_1.Role.Admin, enums_1.Role.User]), async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var search, token, user, error_7;
+            var search, token, user, error_8;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -334,9 +380,9 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_7 = _a.sent();
-                        console.log({ error: error_7 });
-                        res.status(error_7.status || 500).send(!error_7.status ? new errors_1.InternalServerError("Something wrong") : error_7);
+                        error_8 = _a.sent();
+                        console.log({ error: error_8 });
+                        res.status(error_8.status || 500).send(!error_8.status ? new errors_1.InternalServerError("Something wrong") : error_8);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -344,7 +390,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/login")
             .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.staticAuthentication, async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var _a, email, password, search, user, error_8;
+            var _a, email, password, search, user, error_9;
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
@@ -359,8 +405,8 @@ var UserRouter = /** @class */ (function () {
                         });
                         return [3 /*break*/, 3];
                     case 2:
-                        error_8 = _b.sent();
-                        res.status(error_8.status || 500).send(!error_8.status ? new errors_1.InternalServerError("Something wrong") : error_8);
+                        error_9 = _b.sent();
+                        res.status(error_9.status || 500).send(!error_9.status ? new errors_1.InternalServerError("Something wrong") : error_9);
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
                 }
@@ -368,7 +414,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/password/reset")
             .post(middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.staticAuthentication, async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var email, user, resetToken, message, language, heading, payload, subject, filename, error_9;
+            var email, user, resetToken, message, language, heading, payload, subject, filename, error_10;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -400,8 +446,8 @@ var UserRouter = /** @class */ (function () {
                         res.json({ result: "Sent" });
                         return [3 /*break*/, 5];
                     case 4:
-                        error_9 = _a.sent();
-                        res.status(error_9.status || 500).send(!error_9.status ? new errors_1.InternalServerError("Something wrong") : error_9);
+                        error_10 = _a.sent();
+                        res.status(error_10.status || 500).send(!error_10.status ? new errors_1.InternalServerError("Something wrong") : error_10);
                         return [3 /*break*/, 5];
                     case 5: return [2 /*return*/];
                 }
@@ -409,7 +455,7 @@ var UserRouter = /** @class */ (function () {
         }); }));
         this.router.route("/password/set")
             .post(middleware_1.sanitizeQuery, middleware_1.trimQueryWhiteSpace, middleware_1.sanitizeBody, middleware_1.trimBodyWhiteSpace, middleware_1.staticAuthentication, async_wrap_1.asyncWrap(function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var resetToken, password, user, error_10;
+            var resetToken, password, user, error_11;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -430,8 +476,8 @@ var UserRouter = /** @class */ (function () {
                         res.json({ result: "Reset succesfully" });
                         return [3 /*break*/, 4];
                     case 3:
-                        error_10 = _a.sent();
-                        res.status(error_10.status || 500).send(!error_10.status ? new errors_1.InternalServerError("Something wrong") : error_10);
+                        error_11 = _a.sent();
+                        res.status(error_11.status || 500).send(!error_11.status ? new errors_1.InternalServerError("Something wrong") : error_11);
                         return [3 /*break*/, 4];
                     case 4: return [2 /*return*/];
                 }
@@ -441,4 +487,4 @@ var UserRouter = /** @class */ (function () {
     return UserRouter;
 }());
 exports.UserRouter = UserRouter;
-exports.default = new UserRouter(user_controller_1.default, email_controller_1.default, oauth_controller_1.default);
+exports.default = new UserRouter(user_controller_1.default, email_controller_1.default, oauth_controller_1.default, service_controller_1.default, track_controller_1.default, order_controller_1.default);

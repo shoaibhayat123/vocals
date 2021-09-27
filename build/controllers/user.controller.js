@@ -220,8 +220,8 @@ var UserController = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, user_model_1.User.findById({ '_id': id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt")];
+                    case 0: return [4 /*yield*/, user_model_1.User.findById({ '_id': id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
+                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt").populate('wishList')];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -393,7 +393,7 @@ var UserController = /** @class */ (function () {
                         updateDoc = __assign({}, payload);
                         _query = { _id: user._id };
                         return [4 /*yield*/, user_model_1.User.findOneAndUpdate(_query, updateDoc, {
-                                upsert: true, new: true, useFindAndModify: false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
+                                upsert: true, new: true, useFindAndModify: false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks wishList "
                                     + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
                             })];
                     case 6:
@@ -661,6 +661,31 @@ var UserController = /** @class */ (function () {
                                 userId: user._id,
                                 langPref: user.langPref
                             }];
+                }
+            });
+        });
+    };
+    UserController.prototype.getCountOfUsers = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var data;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, user_model_1.User.aggregate([{
+                                $facet: {
+                                    totalCount: [
+                                        { $count: 'totalCount' }
+                                    ]
+                                }
+                            },
+                            {
+                                $project: {
+                                    "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
+                                }
+                            }])];
+                    case 1:
+                        data = _a.sent();
+                        data = data.length > 0 ? data[0] : null;
+                        return [2 /*return*/, data];
                 }
             });
         });

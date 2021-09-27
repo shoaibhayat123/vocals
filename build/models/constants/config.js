@@ -32,7 +32,8 @@ catch (e) {
     // logger.error(`BCRYPT_REHASH_DATE not a valid date: ${BCRYPT_REHASH_DATE}`);
 }
 exports.CONFIG = {
-    MONGOOSEURI: 'mongodb://localhost:27017/vocals_db',
+    MONGOOSEURI: 'mongodb+srv://root:root@cluster0.wqbpt.mongodb.net/vocalsDB?retryWrites=true&w=majority',
+    // MONGOOSEURI: 'mongodb://localhost:27017/vocals_db',	// local server
     // SERVER_ALERT_CONTACTS: serverAlertContacts,
     // SFTP_ALERT_CONTACTS: sftpAlertContacts,	
     // IMAGEBASEURL: 'http://localhost:3005',  // local
