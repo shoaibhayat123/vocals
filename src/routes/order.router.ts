@@ -225,7 +225,7 @@ export class OrderRouter {
                                 }
                             });
                             
-                            order.tracks.forEach((track)=>{
+                            order.products.forEach((track)=>{
                             userForEdit.tracks.push({track: track.track_id,license: track.license_id})
                             })
                             const userEdited = await this.userController.edit(user.role, user.userId, {

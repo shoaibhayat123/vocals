@@ -5,9 +5,11 @@ import { promocodeValues, promocodeTypes } from './enums/promocode';
 const PromoCodeSchema = new Schema({
     title: { type: String },
     expiryDate: { type: Date, default: null },
-    type: {type: String, enum: promocodeValues},
     percentage: { type: Number},
-    amount: { type: Number},
+    validForTrack : { type: Boolean, default: false},
+    validForService : { type: Boolean, default: false},
+    licenses: [{ type: mongoose.Types.ObjectId, ref: 'License', default: null }],
+
 
 
 
@@ -20,9 +22,10 @@ const PromoCodeSchema = new Schema({
 export interface IPromoCode extends mongoose.Document {
     title: string,
     expiryDate: Date,
-    type: promocodeTypes,
     percentage: number,
-    amount: number,
+    validForTrack: boolean,
+    validForService: boolean,
+    licenses: String[],
 
     deleted: boolean,
     deactivated: boolean,
@@ -42,9 +45,10 @@ PromoCodeSchema.statics.getSearchableFields = function(): string[] {
         "_id",
         "title",
         "expiryDate",
-        "type",
         "percentage",
-        "amount"
+        "validForTrack",
+        "validForService",
+        "licenses"
     ];
 }
 
@@ -53,9 +57,10 @@ PromoCodeSchema.statics.getClientFields = function(): string[] {
         "_id",
         "title",
         "expiryDate",
-        "type",
         "percentage",
-        "amount",
+        "validForTrack",
+        "validForService",
+        "licenses",
         "deleted",
         "createdAt"
     ];

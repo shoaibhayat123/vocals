@@ -31,7 +31,8 @@ try {
 }
 
 export const CONFIG = {
-    MONGOOSEURI: 'mongodb://localhost:27017/vocals_db',	// local server
+     MONGOOSEURI: 'mongodb+srv://root:root@cluster0.wqbpt.mongodb.net/vocalsDB?retryWrites=true&w=majority',
+    // MONGOOSEURI: 'mongodb://localhost:27017/vocals_db',	// local server
     // SERVER_ALERT_CONTACTS: serverAlertContacts,
     // SFTP_ALERT_CONTACTS: sftpAlertContacts,	
     

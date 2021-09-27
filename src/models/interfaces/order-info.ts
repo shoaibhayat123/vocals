@@ -1,7 +1,7 @@
 import { IItems } from "./product-info";
 
 export interface IOrderMenu {
-    tracks: IItems[],
+    products: IItems[],
     totalAmount: Number,
     isActive?: boolean,
     createdAt?: Date

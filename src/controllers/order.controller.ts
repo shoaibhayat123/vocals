@@ -11,6 +11,9 @@ import emailController, { EmailController } from '../controllers/email.controlle
 import { IItems } from '../models/interfaces/product-info';
 import { Track } from '../models/Track.model';
 import { License } from '../models/License.model';
+import { PromoCode } from '../models/PromoCode.model';
+import { IServicesItems } from '../models/interfaces/service-info';
+import { Service } from '../models/Service.model';
 
 interface CreateOrderParams {
     query: {
@@ -37,7 +40,7 @@ interface CreateOrderParams {
     imageUrls?: String[],
     paymentMethod?: string,
     status?: string,
-    tracks?: IItems[],
+    products?: IItems[],
     checkoutAt?: Date,
     completedAt?: Date,
     cancelledAt?: Date,
@@ -74,7 +77,7 @@ interface CreateOrUpdateOrderParams {
         imageUrls?: String[],
         paymentMethod?: string,
         status?: string,
-        tracks?: IItems[],
+        products?: IItems[],
         checkoutAt?: Date,
         completedAt?: Date,
         cancelledAt?: Date,
@@ -218,9 +221,9 @@ export class OrderController {
                 message: 'Required params (userId)',
             });
         }
-        if (!payload.tracks || payload.tracks.length < 1) {
-            throw new BadRequestError('Required fileds (products)', {
-                message: 'Required fileds (products)',
+        if (!payload.products || payload.products.length < 1) {
+            throw new BadRequestError('Required fileds (track(s) or service(s))', {
+                message: 'Required fileds (track(s) or service(s))',
             });
         }
         const customer = await this.findCustomer(query.userId);
@@ -238,20 +241,23 @@ export class OrderController {
         //         message: `You can't place new order against customer ${payload.customer_id}`,
         //     });
         // }
-        const tracks = await this.addProducts(payload.tracks);
+        const tracks = await this.addProducts(payload.products);
         if (tracks === null) {
             throw new BadRequestError('Required song not added correctly', {
                 message: 'Required song not added correctly',
             });
         }
-        payload.tracks = tracks.tracks;
+        payload.products = tracks.products;
         // calculation start
         payload.discount = payload.discount ? payload.discount : 0;
         payload.tax = payload.tax ? payload.tax : 0;
         const amount = parseFloat(parseFloat(tracks.totalAmount.toString()).toFixed(2));
         payload.subTotalAmount = amount;
+        console.log(amount);
         const discount = (amount * parseFloat(payload.discount.toString())) / 100;
+        console.log(discount);
         const subTotal = parseFloat(((amount - discount) + parseFloat(payload.tax.toString())).toFixed(2));
+        console.log(subTotal);
         // calculation end
         if (payload.totalAmount && parseFloat(parseFloat(payload.totalAmount.toString()).toFixed(2)) !== subTotal) {
             throw new BadRequestError('Order total is wrong', {
@@ -303,13 +309,13 @@ export class OrderController {
                 message: `Order has been ${order.status}`,
             });
         }
-        const tracks = await this.addProducts(order.tracks);
+        const tracks = await this.addProducts(order.products);
         if (tracks === null) {
             throw new BadRequestError('Required products or track not added correctly', {
                 message: 'Required products or product not added correctly',
             });
         }
-        payload.tracks = tracks.tracks;
+        payload.products = tracks.products;
         const customer = await this.findCustomer(order.customer_id);
         if (customer === null) {
             throw new BadRequestError(`User or Customer not found!`, {
@@ -402,28 +408,25 @@ export class OrderController {
         // });
     }
 
-    async addProducts(tracks: IItems[]): Promise<IOrderMenu | null> {
+    async addProducts(products: IItems[]): Promise<IOrderMenu | null> {
         var newTracks = [] as any;
         var totalAmount = 0;
         var index = 0;
-        for (let track of tracks) {
-            if (!track.track_id) {
-                throw new BadRequestError('Required fileds (menu_id, quantity)', {
-                    message: 'Required fileds (menu_id, quantity)',
-                });
-            }
-            var current = await this.findTrack(track.track_id) as any;
-            var license = await this.findLicense(track.license_id) as any;
+        for (let product of products) {
+            var current = await this.findTrackOrService(product.track_id) as any;
+            // var license = await this.findLicense(track.license_id) as any;
             const newTrack = {} as IItems;
             newTrack.track_id = current._id;
-            newTrack.license_id = license._id;
+            if(product.license_id){
+                newTrack.license_id = product.license_id;
+            }
             newTrack.title = current.title;
             newTrack.imageUrl = current.imageUrl;
-            newTrack.price = license.price;
-            newTrack.discount = track.discount ? track.discount : 0;
-            newTrack.tax = track.tax ? track.tax : 0;
+            newTrack.price = product.price;
+            newTrack.discount = product.discount ? product.discount : 0;
+            newTrack.tax = product.tax ? product.tax : 0;
             // newTrack.commissionPrice = track.commissionPrice ? track.commissionPrice : 0;
-            newTrack.description = track.description ? track.description : '';
+            newTrack.description = product.description ? product.description : '';
             // calculation start
             const amount = parseFloat(newTrack.price.toString())// * parseInt(newTrack.quantity.toString());
             const discount = (amount * parseFloat(newTrack.discount.toString())) / 100;
@@ -436,7 +439,7 @@ export class OrderController {
             index = index + 1;
         }
         const result: IOrderMenu = {
-            tracks: newTracks,
+            products: newTracks,
             totalAmount: totalAmount
         }
         return result;
@@ -471,9 +474,20 @@ export class OrderController {
         return await Order.findOne(query);
     }
 
-    async findTrack(search: string) {
+    async findTrackOrService(search: string) {
         const query = { $and: [{ '_id': mongoose.Types.ObjectId(search) }, { 'deleted': false }] } as any;
-        return await Track.findOne(query);
+        const track = await Track.findOne(query);
+        if(track){
+            return track
+        }else{
+            const service = await Service.findOne(query);
+            return service
+        }
+    }
+
+    async findPromoCode(search: string) {
+        const query = { $and: [{ '_id': mongoose.Types.ObjectId(search) }, { 'deleted': false }] } as any;
+        return await PromoCode.findOne(query);
     }
 
     async findLicense(search: string) {

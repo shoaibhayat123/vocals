@@ -9,9 +9,10 @@ interface CreatePromoCodeParams {
     payload: {
         title?: string,
         expiryDate?: Date,
-        type?: promocodeTypes,
         percentage?: number,
-        amount?: number,
+        validForTrack?: boolean,
+        validForService?: boolean,
+        licenses?: String[],
     }
 }
 
@@ -23,9 +24,10 @@ interface CreateOrUpdatePromoCodeParams {
     payload: {
         title?: string,
         expiryDate?: Date,
-        type?: promocodeTypes,
         percentage?: number,
-        amount?: number,
+        validForTrack?: boolean,
+        validForService?: boolean,
+        licenses?: String[],
         deleted?: boolean,
         deactivated?: boolean,
 
@@ -55,9 +57,9 @@ export class PromoCodeController {
     }
 
     async create({ payload }: CreatePromoCodeParams){
-        if (!payload.title || !payload.expiryDate || !payload.type) {
-            throw new BadRequestError(`Validate fields title and expiryDate and type`, {
-                message: `Requiered Fields title and expiryDate and type`,
+        if (!payload.title || !payload.expiryDate || !payload.percentage) {
+            throw new BadRequestError(`Validate fields title and expiryDate and percentage`, {
+                message: `Requiered Fields title and expiryDate and percentage`,
             });
         }
         const promocode = new PromoCode({
