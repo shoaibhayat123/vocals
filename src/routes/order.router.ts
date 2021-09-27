@@ -218,7 +218,7 @@ export class OrderRouter {
                             const order = await this.orderController.edit(user.role, {
                                 query: { id: req.body.order_id, userId: user.userId },
                                 payload: {
-                                    status: Status.checkout,
+                                    status: Status.completed,
                                     paymentMethod: PaymentMethodStatus.CC,
                                     payerEmail: req.body.payer_email,
                                     token_id: req.body.token_id

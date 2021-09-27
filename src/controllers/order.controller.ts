@@ -241,30 +241,30 @@ export class OrderController {
         //         message: `You can't place new order against customer ${payload.customer_id}`,
         //     });
         // }
-        const tracks = await this.addProducts(payload.products);
-        if (tracks === null) {
+        const products = await this.addProducts(payload.products);
+        if (products === null) {
             throw new BadRequestError('Required song not added correctly', {
                 message: 'Required song not added correctly',
             });
         }
-        payload.products = tracks.products;
+        payload.products = products.products;
         // calculation start
         payload.discount = payload.discount ? payload.discount : 0;
         payload.tax = payload.tax ? payload.tax : 0;
-        const amount = parseFloat(parseFloat(tracks.totalAmount.toString()).toFixed(2));
+        const amount = parseFloat(parseFloat(products.totalAmount.toString()).toFixed(2));
         payload.subTotalAmount = amount;
-        console.log(amount);
-        const discount = (amount * parseFloat(payload.discount.toString())) / 100;
-        console.log(discount);
-        const subTotal = parseFloat(((amount - discount) + parseFloat(payload.tax.toString())).toFixed(2));
-        console.log(subTotal);
+        // console.log(amount);
+        // const discount = (amount * parseFloat(payload.discount.toString())) / 100;
+        // console.log(discount);
+        // const subTotal = parseFloat(((amount - discount) + parseFloat(payload.tax.toString())).toFixed(2));
+        // console.log(subTotal);
         // calculation end
-        if (payload.totalAmount && parseFloat(parseFloat(payload.totalAmount.toString()).toFixed(2)) !== subTotal) {
+        if (payload.totalAmount && parseFloat(parseFloat(payload.totalAmount.toString()).toFixed(2)) !== amount) {
             throw new BadRequestError('Order total is wrong', {
                 message: 'Order total is wrong',
             });
         }
-        payload.totalAmount = subTotal;
+        payload.totalAmount = amount;
         order = new Order({
             ...payload
         });
@@ -309,13 +309,13 @@ export class OrderController {
                 message: `Order has been ${order.status}`,
             });
         }
-        const tracks = await this.addProducts(order.products);
-        if (tracks === null) {
+        const products = await this.addProducts(order.products);
+        if (products === null) {
             throw new BadRequestError('Required products or track not added correctly', {
                 message: 'Required products or product not added correctly',
             });
         }
-        payload.products = tracks.products;
+        payload.products = products.products;
         const customer = await this.findCustomer(order.customer_id);
         if (customer === null) {
             throw new BadRequestError(`User or Customer not found!`, {
@@ -338,17 +338,17 @@ export class OrderController {
         // calculation start
         payload.discount = payload.discount ? payload.discount : order.discount;
         payload.tax = payload.tax ? payload.tax : order.tax;
-        const amount = parseFloat(parseFloat(tracks.totalAmount.toString()).toFixed(2));
+        const amount = parseFloat(parseFloat(products.totalAmount.toString()).toFixed(2));
         payload.subTotalAmount = amount;
-        const discount = (amount * parseFloat(payload.discount.toString())) / 100;
-        const subTotal = parseFloat(((amount - discount) + parseFloat(payload.tax.toString())).toFixed(2));
+        // const discount = (amount * parseFloat(payload.discount.toString())) / 100;
+        // const subTotal = parseFloat(((amount - discount) + parseFloat(payload.tax.toString())).toFixed(2));
         // calculation end
-        if (payload.totalAmount && parseFloat(parseFloat(payload.totalAmount.toString()).toFixed(2)) !== subTotal) {
+        if (payload.totalAmount && parseFloat(parseFloat(payload.totalAmount.toString()).toFixed(2)) !== amount) {
             throw new BadRequestError('Order total is wrong', {
                 message: 'Order total is wrong',
             });
         }
-        payload.totalAmount = subTotal;
+        payload.totalAmount = amount;
         if (payload.status) {
             if ((payload.status !== order.status) && (StatusValues.indexOf(payload.status) === -1)) {
                 throw new BadRequestError('Select valid status', {
@@ -411,14 +411,21 @@ export class OrderController {
     async addProducts(products: IItems[]): Promise<IOrderMenu | null> {
         var newTracks = [] as any;
         var totalAmount = 0;
+        var current
         var index = 0;
         for (let product of products) {
-            var current = await this.findTrackOrService(product.track_id) as any;
-            // var license = await this.findLicense(track.license_id) as any;
+            if(product.track_id){
+            current = await this.findTrackOrService(product.track_id) as any;
+            }else{
+            current = await this.findTrackOrService(product.service_id) as any;
+            }
             const newTrack = {} as IItems;
-            newTrack.track_id = current._id;
-            if(product.license_id){
+            
+            if(product.track_id){
                 newTrack.license_id = product.license_id;
+                newTrack.track_id = current._id;
+            }else{
+                newTrack.service_id = current._id;
             }
             newTrack.title = current.title;
             newTrack.imageUrl = current.imageUrl;

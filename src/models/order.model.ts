@@ -25,7 +25,8 @@ const OrderSchema = new Schema({
     paymentMethod: { type: String, enum: PaymentMethodStatusValues },
     status: { type: String, enum: StatusValues, default: Status.pending },
     products: [{
-        _id: { type: Schema.Types.ObjectId, ref: 'Track' },
+        track_id: { type: Schema.Types.ObjectId, ref: 'Track' },
+        service_id: { type: Schema.Types.ObjectId, ref: 'Service' },
         title: { type: String },
         license_id : { type: mongoose.Types.ObjectId, ref: 'License' },
         imageUrl: { type: String },

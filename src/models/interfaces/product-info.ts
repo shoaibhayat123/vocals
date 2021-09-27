@@ -1,5 +1,6 @@
 export interface IItems {
     track_id: string,
+    service_id: string,
     license_id: string,
     title: string,
     imageUrl: string,
