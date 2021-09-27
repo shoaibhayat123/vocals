@@ -156,14 +156,14 @@ export class PromoCodeController {
         query = { $and: [{ 'deleted': false }, query] };
         let data = await PromoCode.aggregate([{
             $facet: {
-                contact: [
+                promocode: [
                     { $match: query }
                 ]
             }
         },
         {
             $project: {
-                "contact": { $ifNull: [{ $arrayElemAt: ["$contact", 0] }, null] }
+                "promocode": { $ifNull: [{ $arrayElemAt: ["$promocode", 0] }, null] }
             }
         }]);
         data = data.length > 0 ? data[0] : null;
