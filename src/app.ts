@@ -19,6 +19,7 @@ import LicenseRouter from './routes/license.router';
 import ServiceRouter from './routes/service.router';
 import OrderRouter from './routes/order.router';
 import PromoCodeRouter from './routes/promocode.router';
+import StripeKeyRouter from './routes/stripekey.router';
 import { CONFIG } from './models/constants';
 
 // const logger = createLogger('app.ts');
@@ -98,6 +99,7 @@ export class App {
         this.app.use('/v1/service', ServiceRouter.router);
         this.app.use('/v1/order', OrderRouter.router);
         this.app.use('/v1/promocode', PromoCodeRouter.router);
+        this.app.use('/v1/stripe', StripeKeyRouter.router);
 
     }
 }

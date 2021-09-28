@@ -19,16 +19,19 @@ import { me } from '../shared';
 import { CONFIG } from '../models/constants';
 import { User } from '../models/user.model';
 import { error } from 'console';
+import stripekeyController,{ StripeKeyController } from '../controllers/stripekey.controller';
+import { IStripeKey } from '../models/StripeKey.model';
 
 // payment
 //const stripe = require('stripe')(CONFIG.STRIPE_SECRET_KEY_SANDBOX);
 const Stripe = require('stripe');
-const stripe = Stripe('sk_test_51J7GFfBJGFaAOAxJxlhRJaqliTAhyKGK75tR7YWx5ad9TkKlaUUMbSptvPMMFA5aG3k906ZSQrzwyf7pJ7XEeAez00e5M5paBY');
+//const stripe = Stripe('sk_test_51J7GFfBJGFaAOAxJxlhRJaqliTAhyKGK75tR7YWx5ad9TkKlaUUMbSptvPMMFA5aG3k906ZSQrzwyf7pJ7XEeAez00e5M5paBY');
 
 export class OrderRouter {
     public router: express.Router;
     constructor(private orderController: OrderController,
         private userController: UserController,
+        private stripeKeyController: StripeKeyController,
         private userRouter: UserRouter) {
         this.router = express.Router();
         this.middleware();
@@ -206,6 +209,13 @@ export class OrderRouter {
                         // });    
                         // console.log(cardToken);                   
                         // // source: cardToken.id,
+                        const key:any = await this.stripeKeyController.get()
+                        if(key === null){
+                            res.status(400).send(new BadRequestError(error_message, {
+                                message: error_message
+                            }));
+                        }
+                        const stripe = Stripe(key.privateKey);
                         const charge = await stripe.charges.create({
                             amount: amount,
                             currency: "usd",
@@ -250,4 +260,4 @@ export class OrderRouter {
     }
 }
 
-export default new OrderRouter(orderController,userController, userRouter,);
+export default new OrderRouter(orderController,userController, stripekeyController,userRouter,);
