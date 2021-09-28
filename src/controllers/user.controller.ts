@@ -114,20 +114,15 @@ export class UserController {
             $facet: {
                 paginatedResult: [
                     { $match: query },
-                    // {
-                    //     $lookup: {
-                    //         from: 'users',
-                    //         as: 'manager',
-                    //         let: { user_id: '$_id' },
-                    //         pipeline: [
-                    //             { $addFields: { "user_id": { "$toObjectId": "$user_id" } } },
-                    //             {
-                    //                 $match: {
-                    //                     $expr: { $and: [{ $eq: ["$user_id", "$$user_id"] }, { $ne: ["$deleted", true] }] }
-                    //                 }
-                    //             }]
-                    //     }
-                    // },
+                    {
+                        $lookup:
+                                    {
+                                        from:"orders",
+                                        localField:"_id",
+                                        foreignField:"customer_id",
+                                        as:"orderDetails"
+                                    }
+                    },{ $addFields: {orderCount: {$size: "$orderDetails"}}},
                     { $sort: sort },
                     { $skip: (pageOptions.limit * pageOptions.page) - pageOptions.limit },
                     { $limit: pageOptions.limit },
@@ -143,6 +138,7 @@ export class UserController {
             $project: {
                 "paginatedResult": "$paginatedResult",
                 "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
+
             }
         }]);
         data = data.length > 0 ? data[0] : null;
