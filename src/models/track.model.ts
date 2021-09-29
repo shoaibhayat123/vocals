@@ -17,7 +17,6 @@ const TrackSchema = new Schema({
     untaggedMp3Url: { type: String },
     licenses: [{ type: mongoose.Types.ObjectId, ref: 'License', default: null }],
 
-    belongsTo: { type: mongoose.Types.ObjectId, ref: 'User', default: null },
 
     deleted: { type: Boolean, default: false },
     deactivated: { type: Boolean, default: false },
@@ -38,7 +37,6 @@ export interface ITrack extends mongoose.Document {
     untaggedMp3Url: string,
     taggedMp3Url: string,
     stemUrl: string,
-    belongsTo: mongoose.Types.ObjectId | string | null,
     
 
     deleted: boolean,
@@ -61,7 +59,6 @@ TrackSchema.statics.getSearchableFields = function(): string[] {
         "mood",
         "bpm",
         "genre",
-        "belongsTo"
     ];
 }
 
@@ -72,7 +69,6 @@ TrackSchema.statics.getClientFields = function(): string[] {
         "mood",
         "bpm",
         "genre",
-        "belongsTo",
         "deleted",
         "createdAt"
     ];

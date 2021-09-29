@@ -117,14 +117,6 @@ export class TrackRouter {
     private async edit(req, res) {
         try {
             var { search } = req.query as any;
-            const track = await this.trackController._findTrack(search)
-            if (track === null) {
-                return res.status(400).send(new BadRequestError("Track not found"));
-
-            }
-            if (track.belongsTo != res.locals.user.userId || res.locals.user.role == "super admin") {
-                return res.status(400).send(new BadRequestError("You do not have permission to edit"))
-            }
             const result = await this.trackController.edit({  query: { id: search },payload: req.body });
             res.json(result);
         } catch (error:any) {
@@ -135,14 +127,6 @@ export class TrackRouter {
     private async delete(req, res) {
         try {
             const query = req.query as any;
-            const track = await this.trackController._findTrack(query)
-            if (track === null) {
-                return res.status(400).send(new BadRequestError("Track not found"));
-
-            }
-            if (track.belongsTo != res.locals.user.userId || res.locals.user.role == "super admin") {
-                return res.status(400).send(new BadRequestError("You do not have permission to edit"))
-            }
             const result = await this.trackController.delete({ query: query });
             res.json(result);
         } catch (error:any) {

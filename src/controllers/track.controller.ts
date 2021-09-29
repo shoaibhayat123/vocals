@@ -19,8 +19,8 @@ interface CreateTrackParams {
     wavUrl: string | undefined,
     untaggedMp3Url: string,
     taggedMp3Url: string,
-    stemUrl: string,
-    belongsTo: mongoose.Types.ObjectId | string | null,
+    stemUrl: string
+    
     }
 }
 
@@ -41,8 +41,8 @@ export interface CreateOrUpdateTrackParams {
     wavUrl: string| undefined,
     untaggedMp3Url: string,
     taggedMp3Url: string,
-    stemUrl: string,
-    belongsTo?: string,
+    stemUrl: string
+    
 
     }
 }
