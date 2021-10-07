@@ -1,10 +1,10 @@
 export enum FaqCategory {
-    Subscription = 'subscription',
-    Troubleshooting = 'troubleshooting',
-    RoyaltyFreeMusic = 'royaltyfreemusic',
-    SFXLicensing = 'sfxlicensing',
-    Technical = 'technical',
-    Security = 'security',
+    Subscription = 'Subscription',
+    Troubleshooting = 'Troubleshooting',
+    RoyaltyFreeMusic = 'Royalty-Free-Music',
+    SFXLicensing = 'SFX-Licensing',
+    Technical = 'Technical',
+    Security = 'Security',
 
 
 };

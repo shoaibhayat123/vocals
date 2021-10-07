@@ -24,6 +24,7 @@ var license_router_1 = __importDefault(require("./routes/license.router"));
 var service_router_1 = __importDefault(require("./routes/service.router"));
 var order_router_1 = __importDefault(require("./routes/order.router"));
 var promocode_router_1 = __importDefault(require("./routes/promocode.router"));
+var stripekey_router_1 = __importDefault(require("./routes/stripekey.router"));
 var constants_1 = require("./models/constants");
 // const logger = createLogger('app.ts');
 // _ is used as a variable name to ignore the fact that it's not read
@@ -95,6 +96,7 @@ var App = /** @class */ (function () {
         this.app.use('/v1/service', service_router_1.default.router);
         this.app.use('/v1/order', order_router_1.default.router);
         this.app.use('/v1/promocode', promocode_router_1.default.router);
+        this.app.use('/v1/stripe', stripekey_router_1.default.router);
     };
     return App;
 }());
