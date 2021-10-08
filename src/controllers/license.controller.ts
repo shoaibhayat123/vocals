@@ -13,7 +13,11 @@ interface CreateLicenseParams {
     description:string,
     body:string,
     active:boolean,
-    type: licenseTypes
+    type: licenseTypes,
+    stemUrl:boolean,
+    wavUrl:boolean,
+    taggedMp3Url:boolean,
+    untaggedMp3Url:boolean
     }
 }
 
@@ -30,7 +34,11 @@ interface CreateOrUpdateLicenseParams {
     description?:string,
     body?:string,
     active?:boolean,
-    type?: licenseTypes
+    type?: licenseTypes,
+    stemUrl?:boolean,
+    wavUrl?:boolean,
+    taggedMp3Url?:boolean,
+    untaggedMp3Url?:boolean,
 
     }
 }

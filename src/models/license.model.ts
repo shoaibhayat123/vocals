@@ -12,6 +12,10 @@ const LicenseSchema = new Schema({
     body: { type: String },
     active: { type: Boolean, default: true },
     type: { type: String, enum: licenseValues, default: licenseTypes.free},
+    stemUrl: { type: Boolean },
+    wavUrl: { type: Boolean },
+    taggedMp3Url: { type: Boolean },
+    untaggedMp3Url: { type: Boolean },
 
     deleted: { type: Boolean, default: false },
     deactivated: { type: Boolean, default: false },
@@ -28,6 +32,10 @@ export interface ILicense extends mongoose.Document {
     body:string,
     active:boolean,
     type: licenseTypes,
+    stemUrl:boolean,
+    wavUrl:boolean,
+    taggedMp3Url:boolean,
+    untaggedMp3Url:boolean,
 
     deleted: boolean,
     deactivated: boolean,
@@ -51,7 +59,11 @@ LicenseSchema.statics.getSearchableFields = function(): string[] {
         "usage",
         "description",
         "body",
-        "active"
+        "active",
+        "stemUrl",
+        "wavUrl",
+        "taggedMp3Url",
+        "untaggedMp3Url"
     ];
 }
 
@@ -64,6 +76,10 @@ LicenseSchema.statics.getClientFields = function(): string[] {
         "usage",
         "description",
         "body",
+        "stemUrl",
+        "wavUrl",
+        "taggedMp3Url",
+        "untaggedMp3Url",
         "active",
         "deleted",
         "createdAt"

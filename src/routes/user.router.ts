@@ -57,8 +57,8 @@ export class UserRouter {
             if(services === null) {services = [0]}
             let tracks = await this.trackController.getCountOfTracks();
             if(tracks === null){ tracks = [0]}
-            let orders = await this.orderController.getCountOfTracksDownloaded();
-            if(orders === null){ orders = [0]}
+            let orders:any = await this.orderController.getCountOfTracksDownloaded();
+            if(orders.length === 0){ orders = [{"totalTracksDownloaded":0,"totalAmountSpent":0,"totalServicesPurchased":0}]}
             const data = {users,services,tracks,orders}
             res.json(data)
         } catch (error:any) {

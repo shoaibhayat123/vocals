@@ -452,16 +452,20 @@ export class OrderController {
         return result;
     }
     async getCountOfTracksDownloaded(){
-        let data = await Order.aggregate([ {$match: {"tracks":{$exists:true}}},
+        let data = await Order.aggregate([ {$match: {"products":{$exists:true}}},
         {
             $project: {
-                totalTracks: { $size: "$tracks" },
+                totalTracks: { $size: "$products.track_id" },
+                totalServices: { $size: "$products.service_id" },
                 totalAmountSpent : {$sum: "$totalAmount"}
             },
         },{ $group: {
             "_id": null,
             "totalTracksDownloaded": {
                 "$sum": "$totalTracks"
+            },
+            "totalServicesPurchased": {
+                "$sum": "$totalServices"
             },
             "totalAmountSpent":{
                 "$sum": "$totalAmountSpent"
