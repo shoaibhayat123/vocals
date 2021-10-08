@@ -49,6 +49,7 @@ interface CreateOrUpdateUserParams {
     payload: {
         role?: Role,
         user_id?: string,
+        password?: string,
         fullName?: string,
         userName?: string,
         phone_1?: string,
@@ -328,6 +329,10 @@ export class UserController {
                 });
             }
         }
+        if (payload.password) {
+            await user.setPassword(payload.password);
+            payload.password = user.password
+        }
         // if (payload.role && (RoleValues.indexOf(payload.role) === -1 || payload.role === Role.Client) {
         //     throw new BadRequestError(`Role must be in ${RoleValues}, but client role not valid for auth operations`, {
         //         message: `Role must be in ${RoleValues}, but client role not valid for auth operations`,
@@ -346,7 +351,7 @@ export class UserController {
         };
         const _query = { _id: user._id };
         const result = await User.findOneAndUpdate(_query, updateDoc, {
-            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks wishList "
+            upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks wishList"
                 + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
         }) as unknown as IUser;
         return result;
