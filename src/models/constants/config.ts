@@ -68,9 +68,9 @@ export const CONFIG = {
         SERVICE: 'gmail',
         DOMAIN: 'gmail.com',
         EMAIL_FROM: 'developers@appverticals.com',
-        CLIENT_ID: '',
-        CLIENT_SECRET: '',
-        REFRESH_TOEKN: ''
+        CLIENT_ID: '711860456632-nef7oob2b82lja7v31ieert6ne24epdl.apps.googleusercontent.com',
+        CLIENT_SECRET: 'NXhopQoKIebuQhO5mbr3cbvm',
+        REFRESH_TOEKN: '1//04_0eBAvNvMQaCgYIARAAGAQSNwF-L9IryrjdCsJJIf4V6i3gqJZk1FYqQFtHrVXuIOm1AGd6Rl28hGIfmN3DKP1Ppc2WlOmwnjE'
     },
     ENVIRONMENT_CONFIG: loadEnvironmentConfig(EnvironmentName.Test || EnvironmentName.Local),
     ENVIRONMENT_NAME: getEnvironmentName(EnvironmentName.Test || EnvironmentName.Local)
@@ -93,13 +93,13 @@ function loadEnvironmentConfig(NAME: string): {
             };
         case EnvironmentName.Test:
             return {
-                ADMIN_URL: '',
-                CLIENT_URL: '',
+                ADMIN_URL: 'http://52.23.102.26:8145',
+                CLIENT_URL: 'http://52.23.102.26:8145',
             };
         case EnvironmentName.Local:
             return {
-                ADMIN_URL: '',
-                CLIENT_URL: '',
+                ADMIN_URL: 'http://52.23.102.26:8145',
+                CLIENT_URL: 'http://52.23.102.26:8145',
             };
         default:
             throw new Error('Invalid Environment Name given. Must be one of: ' + EnvironmentNameValues);

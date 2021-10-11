@@ -136,8 +136,8 @@ var UserRouter = /** @class */ (function () {
                         return [4 /*yield*/, this.orderController.getCountOfTracksDownloaded()];
                     case 4:
                         orders = _a.sent();
-                        if (orders === null) {
-                            orders = [0];
+                        if (orders.length === 0) {
+                            orders = [{ "totalTracksDownloaded": 0, "totalAmountSpent": 0, "totalServicesPurchased": 0 }];
                         }
                         data = { users: users, services: services, tracks: tracks, orders: orders };
                         res.json(data);

@@ -52,7 +52,7 @@ exports.CONFIG = {
     // IMAGEBASEURL: 'http://localhost:3005',  // local
     IMAGEURLNAME: '/static',
     STATIC_TOKEN: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InJvbGUiOiJ1c2VyIiwidXNlcklkIjoiNWY1Yjk0YTY2YTNjYTMwMDA0YzJjZWJiIn0sImlhdCI6MTU5OTgzOTMwMiwiZXhwIjoxNjAwMDk4NTAyfQ.Fdft4zwZwOzww6Fdbk2t4UiTz1cpNSrIYrzsvddXh1U',
-    mutliGETRouteModules: ['faq', 'track', 'license', 'plan'],
+    mutliGETRouteModules: ['faq', 'track', 'license', 'service'],
     mutliPOSTRouteModules: ['user', 'contact', 'subscribe'],
     BCRYPT_SALT_ROUNDS: 10,
     BCRYPT_REHASH_DATE: BCRYPT_REHASH_DATE || new Date("2019-11-26"),
