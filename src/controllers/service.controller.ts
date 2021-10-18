@@ -120,9 +120,11 @@ export class ServiceController {
     }
 
     async getCountOfServices(){
+        const query = { $and: [{ 'deleted': false }] };
         let data = await Service.aggregate([{
             $facet: {
                 totalCount: [
+                    { $match: query },
                     { $count: 'totalCount' }
                 ]
             }

@@ -536,10 +536,14 @@ export class UserController {
     }
     
     async getCountOfUsers(){
+        const query = { $and: [{ 'role': { $ne: Role.SuperAdmin } }, { 'role': { $ne: Role.Admin } },{ 'deleted': false }] };
         let data = await User.aggregate([{
             $facet: {
+                
                 totalCount: [
-                    { $count: 'totalCount' }
+                    { $match: query },
+                    { $count: 'totalCount' },
+                    
                 ]
             }
         },

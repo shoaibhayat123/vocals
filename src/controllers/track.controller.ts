@@ -136,9 +136,11 @@ export class TrackController {
     }
 
     async getCountOfTracks(){
+        const query = { $and: [{ 'deleted': false }] };
         let data = await Track.aggregate([{
             $facet: {
                 totalCount: [
+                    { $match: query },
                     { $count: 'totalCount' }
                 ]
             }
