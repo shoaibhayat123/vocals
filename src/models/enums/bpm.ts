@@ -1,6 +1,6 @@
 export enum bpmTypes {
-    low = 'low',
-    high = 'high',
-    medium = 'medium',    
+low= "low",
+medium= "medium",
+high= "high" 
 };
 export const bpmValues = Object.keys(bpmTypes).map((k: any) => bpmTypes[k]);
