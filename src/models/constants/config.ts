@@ -49,8 +49,8 @@ export const CONFIG = {
     exportFileTypeExtensions: ['pdf', 'xlsx', 'csv'],
 
     // IMAGEBASEURL: 'https://swinging-api.appnofy.com',  // staging http://3.16.172.190:3002/v1
-    IMAGEBASEURL: 'http://3.16.172.190:3005',  // live http://23.20.51.167:3002/
-    // IMAGEBASEURL: 'http://localhost:3005',  // local
+    //IMAGEBASEURL: 'http://3.16.172.190:3005',  // live http://23.20.51.167:3002/
+    IMAGEBASEURL: 'https://vocals-api.appnofy.com',  // local
     IMAGEURLNAME: '/static',
     STATIC_TOKEN: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7InJvbGUiOiJ1c2VyIiwidXNlcklkIjoiNWY1Yjk0YTY2YTNjYTMwMDA0YzJjZWJiIn0sImlhdCI6MTU5OTgzOTMwMiwiZXhwIjoxNjAwMDk4NTAyfQ.Fdft4zwZwOzww6Fdbk2t4UiTz1cpNSrIYrzsvddXh1U',
     mutliGETRouteModules: ['faq', 'track', 'license', 'service'],
@@ -83,13 +83,13 @@ function loadEnvironmentConfig(NAME: string): {
     switch (NAME) {
         case EnvironmentName.Production:
             return {
-                ADMIN_URL: '',
-                CLIENT_URL: '',
+                ADMIN_URL: 'https://vocals-api.appnofy.com',
+                CLIENT_URL: 'https://vocals-api.appnofy.com',
             };
         case EnvironmentName.Stage:
             return {
-                ADMIN_URL: '',
-                CLIENT_URL: '',
+                ADMIN_URL: 'https://vocals-api.appnofy.com',
+                CLIENT_URL: 'https://vocals-api.appnofy.com',
             };
         case EnvironmentName.Test:
             return {

@@ -88,13 +88,13 @@ function loadEnvironmentConfig(NAME) {
             };
         case environment_name_1.EnvironmentName.Test:
             return {
-                ADMIN_URL: 'http://52.23.102.26:8145',
-                CLIENT_URL: 'http://52.23.102.26:8145',
+                ADMIN_URL: 'https://vocals-api.appnofy.com',
+                CLIENT_URL: 'https://vocals-api.appnofy.com',
             };
         case environment_name_1.EnvironmentName.Local:
             return {
-                ADMIN_URL: 'http://52.23.102.26:8145',
-                CLIENT_URL: 'http://52.23.102.26:8145',
+                ADMIN_URL: 'https://vocals-api.appnofy.com',
+                CLIENT_URL: 'https://vocals-api.appnofy.com',
             };
         default:
             throw new Error('Invalid Environment Name given. Must be one of: ' + environment_name_1.EnvironmentNameValues);
