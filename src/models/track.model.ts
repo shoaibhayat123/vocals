@@ -16,6 +16,7 @@ const TrackSchema = new Schema({
     taggedMp3Url: { type: String },
     untaggedMp3Url: { type: String },
     licenses: [{ type: mongoose.Types.ObjectId, ref: 'License', default: null }],
+    allowDownload: { type: Boolean, default:false},
 
 
     deleted: { type: Boolean, default: false },
@@ -37,6 +38,7 @@ export interface ITrack extends mongoose.Document {
     untaggedMp3Url: string,
     taggedMp3Url: string,
     stemUrl: string,
+    allowDownload:boolean,
     
 
     deleted: boolean,

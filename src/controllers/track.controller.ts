@@ -8,18 +8,19 @@ import { bpmTypes } from '../models/enums/bpm';
 
 interface CreateTrackParams {
     payload: {
-    title: string,
-    genre: genreTypes,
-    mood: moodTypes,
-    licenses: String[],
-    bpm: bpmTypes,
-    releaseDate: Date,
-    description: string,
-    imageUrl: string,
-    wavUrl: string | undefined,
-    untaggedMp3Url: string,
-    taggedMp3Url: string,
-    stemUrl: string
+    title?: string,
+    genre?: genreTypes,
+    mood?: moodTypes,
+    licenses?: String[],
+    bpm?: bpmTypes,
+    releaseDate?: Date,
+    description?: string,
+    imageUrl?: string,
+    wavUrl?: string | undefined,
+    untaggedMp3Url?: string,
+    taggedMp3Url?: string,
+    stemUrl?: string,
+    allowDownload?:boolean
     
     }
 }
@@ -39,9 +40,10 @@ export interface CreateOrUpdateTrackParams {
     description?: string,
     imageUrl?: string,
     wavUrl: string| undefined,
-    untaggedMp3Url: string,
-    taggedMp3Url: string,
-    stemUrl: string
+    untaggedMp3Url?: string,
+    taggedMp3Url?: string,
+    stemUrl?: string,
+    allowDownload?:boolean
     
 
     }

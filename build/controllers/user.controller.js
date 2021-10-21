@@ -668,21 +668,24 @@ var UserController = /** @class */ (function () {
     };
     UserController.prototype.getCountOfUsers = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var data;
+            var query, data;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, user_model_1.User.aggregate([{
-                                $facet: {
-                                    totalCount: [
-                                        { $count: 'totalCount' }
-                                    ]
-                                }
-                            },
-                            {
-                                $project: {
-                                    "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
-                                }
-                            }])];
+                    case 0:
+                        query = { $and: [{ 'role': { $ne: enums_1.Role.SuperAdmin } }, { 'role': { $ne: enums_1.Role.Admin } }, { 'deleted': false }] };
+                        return [4 /*yield*/, user_model_1.User.aggregate([{
+                                    $facet: {
+                                        totalCount: [
+                                            { $match: query },
+                                            { $count: 'totalCount' },
+                                        ]
+                                    }
+                                },
+                                {
+                                    $project: {
+                                        "totalCount": { $ifNull: [{ $arrayElemAt: ["$totalCount.totalCount", 0] }, 0] },
+                                    }
+                                }])];
                     case 1:
                         data = _a.sent();
                         data = data.length > 0 ? data[0] : null;
