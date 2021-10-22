@@ -291,6 +291,11 @@ export class OrderController {
                 message: 'Required fileds (imageUrl)',
             });
         }
+        if (payload.products == null) {
+            throw new BadRequestError('Required products', {
+                message: 'Required field products',
+            });
+        }
         imageUrls = payload.imageUrls ? payload.imageUrls.length > 0 ? payload.imageUrls : [] : [] as any;
         const q = { _id: mongoose.Types.ObjectId(query.id) };
         const order = await Order.findOne(q);
@@ -309,7 +314,7 @@ export class OrderController {
                 message: `Order has been ${order.status}`,
             });
         }
-        const products = await this.addProducts(order.products);
+        const products = await this.addProducts(payload.products);
         if (products === null) {
             throw new BadRequestError('Required products or track not added correctly', {
                 message: 'Required products or product not added correctly',
