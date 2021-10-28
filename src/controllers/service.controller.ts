@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import { Service, IService } from '../models/Service.model';
 import { Role, SearchType, Sort, SortValues } from '../models/enums';
 import { UnauthorizedError, BadRequestError, InternalServerError, NotFoundError, ForbiddenError, ConflictError } from "../errors";
+import turl from 'turl';
 
 interface CreateServiceParams {
     payload: {
@@ -11,6 +12,8 @@ interface CreateServiceParams {
         category: string,
         price: number,
         currencySymbol:string,
+        tinyUrl?:string,
+
         
     }
 }
@@ -21,12 +24,14 @@ interface CreateOrUpdateServiceParams {
         id?: string
     },
     payload: {
-        title: string,
-        image: string,
-        description: string,
-        category: string,
-        price: number,
-        currencySymbol:string,
+        title?: string,
+        image?: string,
+        description?: string,
+        category?: string,
+        price?: number,
+        currencySymbol?:string,
+        tinyUrl?:string,
+
 
     }
 }
@@ -62,6 +67,13 @@ export class ServiceController {
         const service = new Service({
             ...payload
         });
+        if(service){
+            service.tinyUrl = await turl.shorten(`https://vocals.appnofy.com/view-details/${service._id}`).then((res) => {
+                return res;
+              }).catch((err) => {
+                console.log(err);
+              });
+        };
         await service.save();
         return service;
     }

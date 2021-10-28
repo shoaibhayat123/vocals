@@ -7,6 +7,8 @@ const ServiceSchema = new Schema({
     category: { type: String },
     price: { type: Number },
     currencySymbol: { type: String, default: '$' },
+    tinyUrl: { type: String },
+
 
     deleted: { type: Boolean, default: false },
     deactivated: { type: Boolean, default: false },
@@ -21,6 +23,7 @@ export interface IService extends mongoose.Document {
     category: string,
     price: number,
     currencySymbol:string,
+    tinyUrl:string,
     
 
     deleted: boolean,

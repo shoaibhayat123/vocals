@@ -4,6 +4,7 @@ import { Role, SearchType, Sort, SortValues } from '../models/enums';
 import { UnauthorizedError, BadRequestError, InternalServerError, NotFoundError, ForbiddenError, ConflictError } from "../errors";
 import { licenseTypes } from '../models/enums/licenseTypes';
 
+
 interface CreateLicenseParams {
     payload: {
     title: string,
@@ -17,7 +18,8 @@ interface CreateLicenseParams {
     stemUrl:boolean,
     wavUrl:boolean,
     taggedMp3Url:boolean,
-    untaggedMp3Url:boolean
+    untaggedMp3Url:boolean,
+
     }
 }
 
@@ -39,6 +41,7 @@ interface CreateOrUpdateLicenseParams {
     wavUrl?:boolean,
     taggedMp3Url?:boolean,
     untaggedMp3Url?:boolean,
+
 
     }
 }

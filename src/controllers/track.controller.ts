@@ -5,6 +5,8 @@ import { UnauthorizedError, BadRequestError, InternalServerError, NotFoundError,
 import { genreTypes } from '../models/enums/genre';
 import { moodTypes } from '../models/enums/mood';
 import { bpmTypes } from '../models/enums/bpm';
+import turl from 'turl';
+
 
 interface CreateTrackParams {
     payload: {
@@ -20,7 +22,9 @@ interface CreateTrackParams {
     untaggedMp3Url?: string,
     taggedMp3Url?: string,
     stemUrl?: string,
-    allowDownload?:boolean
+    allowDownload?:boolean,
+    tinyUrl?: string
+
     
     }
 }
@@ -43,7 +47,8 @@ export interface CreateOrUpdateTrackParams {
     untaggedMp3Url?: string,
     taggedMp3Url?: string,
     stemUrl?: string,
-    allowDownload?:boolean
+    allowDownload?:boolean,
+    tinyUrl?: string 
     
 
     }
@@ -80,7 +85,15 @@ export class TrackController {
         const track = new Track({
             ...payload
         });
-        await track.save();
+        if(track){
+            track.tinyUrl = await turl.shorten(`https://vocals.appnofy.com/track-details/${track._id}`).then((res) => {
+                console.log(res);
+                return res;
+              }).catch((err) => {
+                console.log(err);
+              });
+        };
+        track.save()
         return track;
     }
 
