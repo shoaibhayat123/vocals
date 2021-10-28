@@ -47,7 +47,13 @@ const UserSchema = new Schema({
     passwordResetToken: {
         token: { type: String, default: null },
         expiry: { type: Date, default: null },
-    }
+    },
+    billingFullName: { type: String, default: '' },
+    billingEmail: { type: String, default: '' },
+    billingAdress: { type: String, default: '' },
+    billingCity: { type: String, default: '' },
+    billingCountry: { type: String, default: '' },
+    billingZipCode: { type: String, default: '' },
 });
 
 export interface IUser extends mongoose.Document {
@@ -87,6 +93,12 @@ export interface IUser extends mongoose.Document {
         token: string | null,
         expiry: Date | null,
     },
+    billingFullName: string,
+    billingEmail: string,
+    billingAdress: string,
+    billingCity: string,
+    billingCountry: string,
+    billingZipCode: string,
 
     checkPassword: (password: string) => Promise<boolean>,
     setPassword: (password: string) => Promise<void>,

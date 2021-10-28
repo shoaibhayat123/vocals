@@ -48,7 +48,7 @@ const OrderSchema = new Schema({
     billingEmail: { type: String, default: '' },
     billingAdress: { type: String, default: '' },
     billingCity: { type: String, default: '' },
-    billingState: { type: String, default: '' },
+    billingCountry: { type: String, default: '' },
     billingZipCode: { type: String, default: '' },
 
 

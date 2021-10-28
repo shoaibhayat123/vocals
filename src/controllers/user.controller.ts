@@ -37,6 +37,12 @@ interface CreateUserParams {
         approvedAt?: Date, 
         tracks?: ITrackInfo[],
         wishList?: String[],
+        billingFullName: string,
+        billingEmail?: string,
+        billingAdress?: string,
+        billingCity?: string,
+        billingCountry?: string,
+        billingZipCode?: string,
 
 
     }
@@ -73,7 +79,12 @@ interface CreateOrUpdateUserParams {
         deactivated?: boolean
         tracks?: ITrackInfo[],
         wishList?: String[],
-
+        billingFullName: string,
+        billingEmail?: string,
+        billingAdress?: string,
+        billingCity?: string,
+        billingCountry?: string,
+        billingZipCode?: string,
 
     }
 }
@@ -208,7 +219,7 @@ export class UserController {
 
     async me(id: string): Promise<IUser | null> {
         return await User.findById({ '_id': id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
-            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt").populate('wishList');
+            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode").populate('wishList');
     }
 
     async create({ payload }: CreateUserParams, from: any) {
@@ -301,7 +312,7 @@ export class UserController {
             });
         }
         const user = await User.findById({ '_id': query.id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt");
+            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode");
         if (user === null) {
             throw new UnauthorizedError(`User not found against token`, {
                 message: `User not found against token`,
@@ -311,7 +322,7 @@ export class UserController {
             payload.email = payload.email.toLocaleLowerCase();
             if (user.email !== payload.email) {
                 const user = await User.findOne({ 'email': payload.email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-                    + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt");
+                    + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode");
                 if (user !== null) {
                     throw new UnauthorizedError(`Email already is in use`, {
                         message: `Email already is in use`,
@@ -352,7 +363,7 @@ export class UserController {
         const _query = { _id: user._id };
         const result = await User.findOneAndUpdate(_query, updateDoc, {
             upsert: true, new: true,useFindAndModify:false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks wishList"
-                + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
+                + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode"
         }) as unknown as IUser;
         return result;
     }
@@ -401,7 +412,7 @@ export class UserController {
 
     public async send(email) {
         const user = await User.findOne({ "email": email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt");
+            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode");
         if (user === null) {
             throw new NotFoundError(`User not found`, {
                 message: `User not found`,
@@ -558,7 +569,7 @@ export class UserController {
 
     async notifyNewUser(email: string) {
         const user = await User.findOne({ email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt");
+            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode");
         if (user === null) throw new InternalServerError("Something went wrong while creating user", {
             message: 'Something went wrong while creating user',
         });
