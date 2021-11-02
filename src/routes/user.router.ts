@@ -271,6 +271,58 @@ export class UserRouter {
                         res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
                     }
                 }));
+                this.router.route("/subscription")
+                .get(sanitizeBody, trimBodyWhiteSpace, staticAuthentication,
+                    asyncWrap(async (req, res) => {
+                        try {
+                            const { email,superadmin } = req.query as any;
+                            const role = "super admin"
+                            // const user = await User.findOne([{ 'role': role }]);
+                            // if (user === null) {
+                            //     throw new NotFoundError(`Super Admin not found`, {
+                            //         message: `Super Admin not found`,
+                            //     });
+                            // }
+                            const language = 'en';
+                            const message = `This user ${email} has subscribed for the newsletter`;
+                            const heading = TEMPLATES[language]['subscription']['subject'];
+                            const payload = { heading: heading, title: heading, message: message }
+                            const subject = heading;
+                            const filename = "contact.html";
+                            await this.emailController.send(subject, payload, superadmin, '', filename, '');
+                            
+                            return res.json('Email sent successfully') 
+                        } catch (error:any) {
+                            res.json(error.message);
+                           //return res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
+                        }
+                    }));
+                    this.router.route("/contact")
+                    .get(sanitizeBody, trimBodyWhiteSpace, staticAuthentication,
+                        asyncWrap(async (req, res) => {
+                            try {
+                                const { email,superadmin,message } = req.query as any;
+                                const user = await User.findOne({ "email": email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
+                                 + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode");
+                                if (user === null) {
+                                    throw new NotFoundError(`User not found`, {
+                                        message: `User not found`,
+                                    });
+                                }
+                                // message.name = user.userName
+                                const language = 'en';
+                                const heading = TEMPLATES[language]['contactInfo']['subject'];
+                                const payload = { heading: heading, title: heading, message: message }
+                                const subject = heading;
+                                const filename = "contact.html";
+                                await this.emailController.send(subject, payload, superadmin, '', filename, '');
+                                
+                                return res.json('Email sent successfully') 
+                            } catch (error:any) {
+                                res.json(error.message);
+                               //return res.status(error.status || 500).send(!error.status ? new InternalServerError("Something wrong") : error);
+                            }
+                        }));
     }
 }
 

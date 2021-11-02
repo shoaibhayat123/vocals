@@ -58,7 +58,7 @@ export interface CreateOrUpdateTrackParams {
 export class TrackController {
     constructor() { }
 
-    async get(search: string, type: SearchType, sortKey: Sort, pageOptions): Promise<ITrack[] | null> {
+    async get(search: string, type: SearchType,bpm:bpmTypes,mood:moodTypes,genre:genreTypes, sortKey: Sort, pageOptions): Promise<ITrack[] | null> {
         let query = {};
         const filter = Track.getSearchableFieldsFilter();
         if (search !== undefined && typeof search === 'string') {
@@ -68,7 +68,7 @@ export class TrackController {
                 return !type ? { [field]: search } : type === SearchType.Multi ? { [field]: searchRegExp } : { [field]: search };
             })
         }
-        return this.returnGetResponse(query, sortKey, pageOptions);
+        return this.returnGetResponse(query,bpm,mood,genre, sortKey, pageOptions);
     }
 
     async getBy(search: string): Promise<ITrack | null> {
@@ -175,7 +175,7 @@ export class TrackController {
         return await Track.findOne(query);
     }
 
-    async returnGetResponse(query, sortKey, pageOptions): Promise<ITrack[] | null> {
+    async returnGetResponse(query,bpm,mood,genre, sortKey, pageOptions): Promise<ITrack[] | null> {
         var sort = { createdAt: -1 } as any;
         if (sortKey) {
             const index = await SortValues.indexOf(sortKey);
@@ -190,6 +190,15 @@ export class TrackController {
             } else if (sortKey === Sort.DESC) {
                 sort = { createdAt: 1 };
             }
+        }
+        if(bpm){
+            query = { $and: [{ 'bpm': bpm }, query] };
+        }
+        if(genre){
+            query = { $and: [{ 'genre': genre }, query] };
+        }
+        if(mood){
+            query = { $and: [{ 'mood': mood }, query] };
         }
         query = { $and: [{ 'deleted': false }, query] };
         

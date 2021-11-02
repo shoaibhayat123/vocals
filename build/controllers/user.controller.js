@@ -215,7 +215,7 @@ var UserController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, user_model_1.User.findById({ '_id': id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks "
-                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt").populate('wishList')];
+                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode").populate('wishList')];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });
@@ -336,7 +336,7 @@ var UserController = /** @class */ (function () {
                             });
                         }
                         return [4 /*yield*/, user_model_1.User.findById({ '_id': query.id }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-                                + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt")];
+                                + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode")];
                     case 1:
                         user = _b.sent();
                         if (user === null) {
@@ -348,7 +348,7 @@ var UserController = /** @class */ (function () {
                         payload.email = payload.email.toLocaleLowerCase();
                         if (!(user.email !== payload.email)) return [3 /*break*/, 3];
                         return [4 /*yield*/, user_model_1.User.findOne({ 'email': payload.email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-                                + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt")];
+                                + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode")];
                     case 2:
                         user_1 = _b.sent();
                         if (user_1 !== null) {
@@ -395,7 +395,7 @@ var UserController = /** @class */ (function () {
                         _query = { _id: user._id };
                         return [4 /*yield*/, user_model_1.User.findOneAndUpdate(_query, updateDoc, {
                                 upsert: true, new: true, useFindAndModify: false, select: "langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl tracks wishList"
-                                    + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt"
+                                    + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode"
                             })];
                     case 8:
                         result = _b.sent();
@@ -466,7 +466,7 @@ var UserController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, user_model_1.User.findOne({ "email": email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt")];
+                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode")];
                     case 1:
                         user = _a.sent();
                         if (user === null) {
@@ -700,7 +700,7 @@ var UserController = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4 /*yield*/, user_model_1.User.findOne({ email: email }).select("langPref role _id user_id fullName userName phone_1 phone_2 email description gender dob age imageUrl "
-                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt")];
+                            + "city state country address isAcceptedTerm code approvedAt approvedBy deleted deactivated createdAt updatedAt billingFullName billingAdress billingCity billingCountry billingZipCode")];
                     case 1:
                         user = _a.sent();
                         if (user === null)

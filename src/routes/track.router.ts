@@ -31,8 +31,8 @@ export class TrackRouter {
 
     private async get(req, res) {
         try {
-            const { search, type, sortKey } = req.query as any;
-            const track = await this.trackController.get(search, type,sortKey, await Pagination.pagination(req, 'CT'));
+            const { search, type,bpm,mood,genre, sortKey } = req.query as any;
+            const track = await this.trackController.get(search, type,bpm,mood,genre,sortKey, await Pagination.pagination(req, 'CT'));
             if(track === null) { return res.status(404).send(new NotFoundError(`No record found`, {
                 message: `No record found`, i18n: 'notExist'
             }))}

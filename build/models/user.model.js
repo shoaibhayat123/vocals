@@ -99,7 +99,13 @@ var UserSchema = new mongoose_1.Schema({
     passwordResetToken: {
         token: { type: String, default: null },
         expiry: { type: Date, default: null },
-    }
+    },
+    billingFullName: { type: String, default: '' },
+    billingEmail: { type: String, default: '' },
+    billingAdress: { type: String, default: '' },
+    billingCity: { type: String, default: '' },
+    billingCountry: { type: String, default: '' },
+    billingZipCode: { type: String, default: '' },
 });
 ;
 UserSchema.statics.getSearchableField = function () {

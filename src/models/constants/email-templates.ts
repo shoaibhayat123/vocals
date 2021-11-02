@@ -23,6 +23,10 @@ export const TEMPLATES: {
             template: 'send-code',
             subject: 'Confirm Code',
         },
+        'subscription': {
+            template: 'contact',
+            subject: 'Subscription of Newsletter',
+        },
         'orderPending': {
             template: 'order-pending',
             subject: 'Order Pending',

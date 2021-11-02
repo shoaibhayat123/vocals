@@ -116,7 +116,7 @@ export class OrderController {
                 sort = { createdAt: 1 };
             }
         }
-        query = { $and: [{ 'deleted': false }, { status: { $ne: Status.pending } }, query] };
+        query = { $and: [{ 'deleted': false }, { status: { $ne: Status.completed } }, query] };
         var _query = {};
         // if (user !== null && user.role === Role.Rider) {
         //     _query = { 'delivery.rider_id': mongoose.Types.ObjectId(user.userId) };
@@ -124,7 +124,25 @@ export class OrderController {
         let data = await Order.aggregate([{
             $facet: {
                 paginatedResult: [
-                    { $match: query },   
+                    { $match: query }, 
+                    {
+                        $lookup:
+                                    {
+                                        from:"tracks",
+                                        localField:"products.track_id",
+                                        foreignField:"_id",
+                                        as:"trackDetails"
+                                    }
+                    },  
+                    {
+                        $lookup:
+                                    {
+                                        from:"services",
+                                        localField:"products.service_id",
+                                        foreignField:"_id",
+                                        as:"serviceDetails"
+                                    }
+                    },  
                     { $sort: sort },
                     { $skip: (pageOptions.limit * pageOptions.page) - pageOptions.limit },
                     { $limit: pageOptions.limit }
